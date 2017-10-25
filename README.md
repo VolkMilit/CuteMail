@@ -1,5 +1,6 @@
 # CuteMail
 All mail clients suck. This one just sucks less. (c) circa (mutt)
+
 WIP shell for fetchmail, mta and MhonArc, fast mail client.
 
 ### Why?
