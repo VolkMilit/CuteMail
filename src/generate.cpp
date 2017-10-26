@@ -5,6 +5,7 @@ generate::generate() :
 {
     fetchmailConfigPath = QDir::homePath() + "/.fetchmailrc";
     procmailConfigPath = QDir::homePath() + "/.procmailrc";
+    mailFolderPath = QDir::homePath() + "/mail/"; // will be configurable
 }
 
 generate::~generate()
@@ -17,10 +18,10 @@ generate::~generate()
 // https://www.mhonarc.org/MHonArc/doc/resources.html
 // need to look closely, but I think we can generate file
 // btw for the first prototipe version this is better solution to not fuck everyting up
-void generate::mhaExecutable(QString accaunt_name)
+void generate::mhaExecutable(QString account_name)
 {
-    const QString dirTmp = QDir::homePath() + "/mail/" + accaunt_name + "/out/*";
-    const QString dirIncoming = QDir::homePath() + "/mail/" + accaunt_name + "/incoming/";
+    const QString dirTmp = QDir::homePath() + "/mail/" + account_name + "/out/*";
+    const QString dirIncoming = QDir::homePath() + "/mail/" + account_name + "/incoming/";
 
     QFile file(setting->getSettingsPath() + "start.sh");
     if (file.open(QIODevice::ReadWrite))
@@ -43,6 +44,26 @@ void generate::deleteExecutable()
 
     if (file.exists())
         file.remove();
+}
+
+void generate::accauntsFolders(QString account_name)
+{
+    QDir account(mailFolderPath + account_name);
+    QDir account_incoming(mailFolderPath + account_name + "/incoming");
+    QDir account_junk(mailFolderPath + account_name + "/junk");
+    QDir account_trash(mailFolderPath + account_name + "/trash");
+
+    if (!account.exists())
+        account.mkdir(mailFolderPath + account_name);
+
+    if (!account_incoming.exists())
+        account.mkdir(mailFolderPath + account_name + "/incoming");
+
+    if (!account_junk.exists())
+        account.mkdir(mailFolderPath + account_name + "/junk");
+
+    if (!account_trash.exists())
+        account.mkdir(mailFolderPath + account_name + "/trash");
 }
 
 // -------- procmail -------- //
@@ -71,13 +92,13 @@ void generate::procmailDelete()
 // so user can decide, when (s)he need to delete or restore
 // mail from junk
 // P.S. they have json file, so maybe we shall parse json
-void generate::createProcmailConfig(QString accaunt_name)
+void generate::createProcmailConfig(QString account_name)
 {
     QFile file(procmailConfigPath);
     if (file.open(QIODevice::ReadWrite))
     {
         QTextStream stream(&file);
-        stream << "DEFAULT=" + QDir::homePath() + "/mail/" + accaunt_name + "/out" << endl;
+        stream << "DEFAULT=" + QDir::homePath() + "/mail/" + account_name + "/out" << endl;
     }
 
     file.close();

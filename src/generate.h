@@ -13,12 +13,13 @@ class generate
 public:
     generate();
     ~generate();
-    void procmailConfig(QString accaunt_name);
+    void procmailConfig(QString account_name);
     void fetchmailConfig(QString server, QString protocol, QString username, QString password);
     void fetchmailDelete();
     void procmailDelete();
-    void mhaExecutable(QString accaunt_name);
+    void mhaExecutable(QString account_name);
     void deleteExecutable();
+    void accauntsFolders(QString account_name);
 
 private:
     void createFetchFile(QString server, QString protocol, QString username, QString password);
@@ -26,6 +27,7 @@ private:
 
     QString fetchmailConfigPath;
     QString procmailConfigPath;
+    QString mailFolderPath;
 
     settings *setting;
 };
