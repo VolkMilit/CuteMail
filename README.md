@@ -11,7 +11,7 @@ Because every mail clients sucks. Nuff said.
 - Claws-mail is good enough, but with multiple accounts it's sucks. It can't even connect to my account and, sometimes, gets a removed mail. I would like to commit to their code, but I don't like GTK developing.
 - Trojitá, KMail - nailed to KDE infrastructure, and it's pointless to use it outside of KDE.
 
-Aaaaaaaand, that's all. So far I don't see any alternatives to GNU/Linux. So we're need to reinvent the bicycle.
+Aaaaaaaand, that's all. So far I don't see any alternatives for GNU/Linux. So we're need to reinvent the bicycle.
 
 ### Goal
 Creating:
