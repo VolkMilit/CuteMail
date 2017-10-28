@@ -13,6 +13,11 @@ generate::~generate()
     delete setting;
 }
 
+QString generate::getMailFolderPath()
+{
+    return mailFolderPath;
+}
+
 // temporarily "fix" for creating executable script for fetchmail and mha
 // ps there is resource file
 // https://www.mhonarc.org/MHonArc/doc/resources.html

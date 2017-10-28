@@ -6,7 +6,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     gen(new generate()),
-    setting(new settings())
+    setting(new settings()),
+    maild(new mailDir())
 {
     ui->setupUi(this);
 
@@ -25,14 +26,20 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+QString MainWindow::getCurrentAccount()
+{
+    QModelIndex index = ui->treeView->currentIndex();
+    return index.data().toString();
+}
+
 // this will populate tree view with model, but I still can't off extra fields
 void MainWindow::populateTreeView()
 {
     QFileSystemModel *model = new QFileSystemModel;
-    model->setRootPath(QDir::homePath() + "/mail/");
+    model->setRootPath(gen->getMailFolderPath());
     model->setFilter(QDir::NoDotAndDotDot | QDir::Dirs);
     ui->treeView->setModel(model);
-    ui->treeView->setRootIndex(model->index(QDir::homePath() + "/mail/"));
+    ui->treeView->setRootIndex(model->index(gen->getMailFolderPath()));
 
     // hide unnecessary column
     for (int i = 1; i < 4; i++)
@@ -43,8 +50,6 @@ void MainWindow::setupWindow()
 {
     // I dunno, maybe it can be disabled throught gui in qtcreator?
     ui->tb_mails->setEditTriggers(QAbstractItemView::NoEditTriggers); // disable edit mode
-
-    fetchDir(QDir::homePath() + "/mail/out"); // will be configurated
 }
 
 // there will be all webview-related settings
@@ -84,23 +89,15 @@ void MainWindow::writeSettings()
     setting->setWindowFullscreen(QString::number(this->isMaximized()));
 }
 
-void MainWindow::fetchDir(QString dir)
+void MainWindow::populateTable()
 {
     ui->tb_mails->setRowCount(0); // clear table
 
-    QVector<QString> tmp;
-
-    QDirIterator it(dir, QStringList() << "*.html", QDir::Files);
-    while (it.hasNext())
-        tmp.push_back(it.next());
-
-    std::sort(tmp.begin(), tmp.end());
+    tmp.clear();
+    tmp.append(maild->scanDir(gen->getMailFolderPath() + getCurrentAccount() + "/incoming"));
 
     for (int i = 0; i < tmp.size(); i++)
     {
-        QTableWidgetItem *item0 = new QTableWidgetItem;
-        item0->setText(tmp.at(i));
-
         QTableWidgetItem *item1 = new QTableWidgetItem;
         item1->setText(readmailbox->readSubject(tmp.at(i)));
 
@@ -112,10 +109,9 @@ void MainWindow::fetchDir(QString dir)
 
         ui->tb_mails->insertRow(i);
 
-        ui->tb_mails->setItem(i, 0, item0);
-        ui->tb_mails->setItem(i, 1, item1);
-        ui->tb_mails->setItem(i, 2, item2);
-        ui->tb_mails->setItem(i, 3, item3);
+        ui->tb_mails->setItem(i, 0, item1);
+        ui->tb_mails->setItem(i, 1, item2);
+        ui->tb_mails->setItem(i, 2, item3);
     }
 }
 
@@ -124,33 +120,29 @@ void MainWindow::refresh()
     gen->fetchmailDelete();
     gen->procmailDelete();
     gen->deleteExecutable();
-    fetchDir(QDir::homePath() + "/mail/out");
+    populateTable();
 }
 
 void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
 {
+    ui->tb_mails->selectRow(item->row());
+
     // temporary solution for a couple of version,
     // in in the next version it will be replaced by
     // someting else, but no browser
-    ui->webView->setUrl("file://" + item->text());
+    ui->webView->setUrl("file://" + tmp.at(item->row()));
 }
 
 void MainWindow::on_actionFetch_mail_triggered()
 {
-    QModelIndex index = ui->treeView->currentIndex();
-
-    const QString accaunt = index.data().toString();
-    const QStringList tmp2 = accaunt.split("@");
-
-    connect(fetch_proc, SIGNAL(finished(int)), this, SLOT(refresh())); // don't working? wtf?!
-    askForPassword(tmp2.at(1), "pop3", tmp2.at(0));
+    QStringList account = getCurrentAccount().split("@");
+    connect(fetch_proc, SIGNAL(finished(int)), this, SLOT(refresh())); // doesn't work? wtf?!
+    askForPassword(account.at(1), "pop3", account.at(0));
     fetch_proc->startDetached(setting->getSettingsPath() + "start.sh");
 }
 
 void MainWindow::askForPassword(QString server, QString protocol, QString username)
 {
-    QModelIndex index = ui->treeView->currentIndex();
-
     bool ok;
     QString text = QInputDialog::getText(this, tr("CuteMail"),
                                             tr("Enter password for "), QLineEdit::Password,
@@ -159,23 +151,23 @@ void MainWindow::askForPassword(QString server, QString protocol, QString userna
     if (ok && !text.isEmpty())
     {
         gen->fetchmailConfig(server, protocol, username, text);
-        gen->procmailConfig(index.data().toString()); // need to get parent, when focuse on incoming or trash or junk
-        gen->mhaExecutable(index.data().toString());
+        gen->procmailConfig(getCurrentAccount()); // need to get parent, when focuse on incoming or trash or junk
+        gen->mhaExecutable(getCurrentAccount());
     }
     else
     {
-        QMessageBox::critical(this, "CuteMail", "Can't connect to " + username + "@" + server, QMessageBox::Ok);
+        QMessageBox::critical(this, "CuteMail", "Can't connect to " + getCurrentAccount(), QMessageBox::Ok);
     }
 }
 
 void MainWindow::on_treeView_clicked(const QModelIndex &index)
 {
-    fetchDir(QDir::homePath() + "/mail/" + index.data().toString() + "/incoming");
+    populateTable();
     setWindowTitle(index.data().toString() + " - CuteMail");
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    event = nullptr; // shut up the compiller, whithout parametrs function just not working
+    event = nullptr; // shut up the compiller, whithout parametr function just not working
     writeSettings();
 }

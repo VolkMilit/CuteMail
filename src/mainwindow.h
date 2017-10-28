@@ -11,11 +11,9 @@
 #include <QMessageBox>
 #include <QFileSystemModel>
 
-//std headers
-#include <algorithm>
-
 #include "readmailbox.h"
 #include "generate.h"
+#include "maildir.h"
 
 namespace Ui {
 class MainWindow;
@@ -32,7 +30,7 @@ public:
 private slots:
     void on_tb_mails_itemClicked(QTableWidgetItem *item);
     void on_actionFetch_mail_triggered();
-    void fetchDir(QString dir);
+    void populateTable();
     void refresh();
     void on_treeView_clicked(const QModelIndex &index);
 
@@ -46,13 +44,17 @@ private:
     void populateTreeView();
     void readSettings();
     void writeSettings();
+    QString getCurrentAccount();
 
     Ui::MainWindow *ui;
     readMailbox *readmailbox;
     generate *gen;
     settings *setting;
+    mailDir *maild;
 
     QProcess *fetch_proc;
+
+    QVector<QString> tmp;
 };
 
 #endif // MAINWINDOW_H

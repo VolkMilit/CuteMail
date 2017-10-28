@@ -29,13 +29,15 @@ SOURCES += src/main.cpp\
     src/generate.cpp \
     src/fetchmail.cpp \
     src/mhonarc.cpp \
-    src/settings.cpp
+    src/settings.cpp \
+    src/maildir.cpp
 
 HEADERS  += src/mainwindow.h \
     src/readmailbox.h \
     src/generate.h \
     src/fetchmail.h \
     src/mhonarc.h \
-    src/settings.h
+    src/settings.h \
+    src/maildir.h
 
 FORMS    += src/mainwindow.ui

@@ -20,6 +20,7 @@ public:
     void mhaExecutable(QString account_name);
     void deleteExecutable();
     void accauntsFolders(QString account_name);
+    QString getMailFolderPath();
 
 private:
     void createFetchFile(QString server, QString protocol, QString username, QString password);

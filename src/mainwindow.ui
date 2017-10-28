@@ -39,6 +39,9 @@
         <property name="alternatingRowColors">
          <bool>false</bool>
         </property>
+        <property name="showGrid">
+         <bool>false</bool>
+        </property>
         <property name="gridStyle">
          <enum>Qt::NoPen</enum>
         </property>
@@ -51,11 +54,6 @@
         <attribute name="horizontalHeaderMinimumSectionSize">
          <number>100</number>
         </attribute>
-        <column>
-         <property name="text">
-          <string>File</string>
-         </property>
-        </column>
         <column>
          <property name="text">
           <string>Subject</string>
