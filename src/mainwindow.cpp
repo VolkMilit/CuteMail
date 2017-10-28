@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setupWindow();
     populateTreeView();
     setupWebView();
+    readSettings();
 
     fetch_proc = new QProcess(this);
 }
@@ -32,13 +33,14 @@ void MainWindow::populateTreeView()
     model->setFilter(QDir::NoDotAndDotDot | QDir::Dirs);
     ui->treeView->setModel(model);
     ui->treeView->setRootIndex(model->index(QDir::homePath() + "/mail/"));
+
+    // hide unnecessary column
+    for (int i = 1; i < 4; i++)
+        ui->treeView->setColumnHidden(i, true);
 }
 
 void MainWindow::setupWindow()
 {
-    // read settings
-    // todo
-
     // I dunno, maybe it can be disabled throught gui in qtcreator?
     ui->tb_mails->setEditTriggers(QAbstractItemView::NoEditTriggers); // disable edit mode
 
@@ -53,6 +55,33 @@ void MainWindow::setupWebView()
     ui->webView->settings()->setOfflineStorageDefaultQuota(0);
     ui->webView->settings()->setObjectCacheCapacities(0, 0, 0);
     ui->webView->settings()->setOfflineWebApplicationCacheQuota(0);
+}
+
+void MainWindow::readSettings()
+{
+    const QString dem = setting->getWindowDemention();
+    const QString max = setting->getWindowFullscreen();
+    const QString column = setting->getTableHeadersWight();
+    const QStringList column_list = column.split(",");
+
+    this->resize(dem.split("x")[0].toInt(), dem.split("x")[1].toInt());
+    if (max.toInt() == 1) this->showMaximized();
+
+    for (int i = 0; i < column_list.length(); i++)
+        ui->tb_mails->setColumnWidth(i, column_list.at(i).toInt());
+}
+
+void MainWindow::writeSettings()
+{
+    QString column_str;
+
+    for (int i = 0; i < ui->tb_mails->columnCount(); i++)
+        column_str += QString::number(ui->tb_mails->columnWidth(i)) + ",";
+
+    setting->setTableHeadersWight(column_str);
+    //setting->setSplitterSizes(ui->splitter->w);
+    setting->setWindowDemention(QString::number(MainWindow::width()) + "x" + QString::number(MainWindow::height()));
+    setting->setWindowFullscreen(QString::number(this->isMaximized()));
 }
 
 void MainWindow::fetchDir(QString dir)
@@ -147,24 +176,6 @@ void MainWindow::on_treeView_clicked(const QModelIndex &index)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    QVector<int> column;
-    QVector<int> splitters;
-    QVector<int> windowDem;
-
-    // getting value
-    for (int i = 0; i < ui->tb_mails->columnCount(); i++)
-        column.push_back(ui->tb_mails->columnWidth(i));
-
-    splitters.push_back(ui->splitter->height());
-    splitters.push_back(ui->splitter_2->width());
-
-    windowDem.push_back(MainWindow::width());
-    windowDem.push_back(MainWindow::height());
-
-    // setting value
-    for (int i = 0; i < column.size(); i++)
-        setting->setTableHeadersWight(QString::number(column.at(i)) + ",");
-
-    setting->setSplitterSizes(QString::number(splitters.at(0)) + "," + QString::number(splitters.at(1)));
-    setting->setWindowDemention(QString::number(windowDem.at(0)) + "x" + QString::number(windowDem.at(1)));
+    event = nullptr; // shut up the compiller, whithout parametrs function just not working
+    writeSettings();
 }

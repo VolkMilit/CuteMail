@@ -11,7 +11,7 @@ public:
     settings();
     ~settings();
 
-    void write(QString group, QString value, QString var);
+    void write(QString group, QString value, QVariant var);
     QString read(QString group, QString value);
     QString getSettingsPath();
 
@@ -21,12 +21,16 @@ public:
     QString getTableHeadersWight();
 
     // SplitterSizes
-    void setSplitterSizes(QString value);
+    void setSplitterSizes(QByteArray value);
     QString getSplitterSizes();
 
     // WindowDemention
     void setWindowDemention(QString value);
     QString getWindowDemention();
+
+    // WindowFullscreen
+    void setWindowFullscreen(QString value);
+    QString getWindowFullscreen();
 
 private:
     QString settingsPath;

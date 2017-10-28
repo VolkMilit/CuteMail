@@ -25,7 +25,7 @@ QString settings::getTableHeadersWight()
 }
 
 // SplitterSizes
-void settings::setSplitterSizes(QString value)
+void settings::setSplitterSizes(QByteArray value)
 {
     write("General", "SplitterSizes", value);
 }
@@ -46,12 +46,23 @@ QString settings::getWindowDemention()
     return read("General", "WindowDemention");
 }
 
+// WindowFullscreen
+void settings::setWindowFullscreen(QString value)
+{
+    write("General", "WindowFullscreen", value);
+}
+
+QString settings::getWindowFullscreen()
+{
+    return read("General", "WindowFullscreen");
+}
+
 QString settings::getSettingsPath()
 {
     return settingsPath;
 }
 
-void settings::write(QString group, QString value, QString var)
+void settings::write(QString group, QString value, QVariant var)
 {
     QSettings settings(settingsPath + settingsBase, QSettings::IniFormat);
     settings.beginGroup(group);
