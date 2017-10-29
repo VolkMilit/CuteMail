@@ -1,7 +1,7 @@
 # CuteMail
 All mail clients suck. This one just sucks less. (c) circa (mutt)
 
-WIP shell for fetchmail, mta and MhonArc, fast mail client.
+WIP shell for fetchmail, mta and MHonArc, fast mail client.
 
 ### Why?
 Because every mail clients sucks. Nuff said. 
@@ -19,6 +19,15 @@ Creating:
 - No browser, no javascript.
 - Junk mail must be move to junk folders, without deleting, user must dicede what (s)he want to do with them.
 - Clear and understandable interface - no useless buttons and settings. (hello, Thunderbird!)
+
+### Dependencies
+- Qt5
+- Compiller with C++11 support
+- Fetchmail
+- Procmail
+- MHonArc (may be depricated in future update)
+
+MTA (e.g. Procmail) will be configured in future update. For example: default MTA in Debian (and maybe *buntu-like) is Exim, so we need to use it.
 
 ### LICENSE
 See LICENSE in root repository.
