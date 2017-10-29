@@ -32,6 +32,10 @@ public:
     void setWindowFullscreen(QString value);
     QString getWindowFullscreen();
 
+    // LastAccount
+    void setLastAccount(QString value);
+    QString getLastAccount();
+
 private:
     QString settingsPath;
     QString accauntsBase;

@@ -43,7 +43,7 @@ private:
     void populateTreeView();
     void readSettings();
     void writeSettings();
-    QString getCurrentAccount();
+    QStringList getCurrentAccount();
 
     Ui::MainWindow *ui;
     readMailbox *readmailbox;

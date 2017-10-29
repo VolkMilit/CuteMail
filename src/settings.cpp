@@ -57,6 +57,17 @@ QString settings::getWindowFullscreen()
     return read("General", "WindowFullscreen");
 }
 
+// LastAccount
+void settings::setLastAccount(QString value)
+{
+    write("General", "LastAccount", value);
+}
+
+QString settings::getLastAccount()
+{
+    return read("General", "LastAccount");
+}
+
 QString settings::getSettingsPath()
 {
     return settingsPath;

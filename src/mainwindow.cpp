@@ -20,17 +20,32 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete gen;
+    tmp.clear(); // just in case
+
     delete fetch_proc;
+
+    delete gen;
     delete setting;
     delete maild;
     delete ui;
 }
 
-QString MainWindow::getCurrentAccount()
+QStringList MainWindow::getCurrentAccount()
 {
-    QModelIndex index = ui->treeView->currentIndex();
-    return index.data().toString();
+    const QModelIndex index = ui->treeView->currentIndex();
+    QStringList list;
+
+    if (index.parent().row() > 0) // we're on child item
+    {
+        list.push_back(index.parent().data().toString());
+        list.push_back(index.data().toString());
+        return list;
+    }
+    else                          // we're on parent item
+    {
+        list.push_back(index.data().toString());
+        return list;
+    }
 }
 
 // this will populate tree view with model, but I still can't off extra fields
@@ -79,7 +94,6 @@ void MainWindow::writeSettings()
         column_str += QString::number(ui->tb_mails->columnWidth(i)) + ",";
 
     setting->setTableHeadersWight(column_str);
-    //setting->setSplitterSizes(ui->splitter->w);
     setting->setWindowDemention(QString::number(MainWindow::width()) + "x" + QString::number(MainWindow::height()));
     setting->setWindowFullscreen(QString::number(this->isMaximized()));
 }
@@ -89,7 +103,11 @@ void MainWindow::populateTable()
     ui->tb_mails->setRowCount(0); // clear table
 
     tmp.clear();
-    tmp.append(maild->scanDir(gen->getMailFolderPath() + getCurrentAccount() + "/incoming"));
+    if (getCurrentAccount().count() > 1) // we're in specific folder (i.e. /incoming)
+        tmp.append(maild->scanDir(gen->getMailFolderPath() + getCurrentAccount().at(0)
+                                  + "/" + getCurrentAccount().at(1)));
+    else                                 // we're just focuse on account name, so fallback to default
+        tmp.append(maild->scanDir(gen->getMailFolderPath() + getCurrentAccount().at(0) + "/incoming"));
 
     for (int i = 0; i < tmp.size(); i++)
     {
@@ -128,9 +146,10 @@ void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
 
 void MainWindow::on_actionFetch_mail_triggered()
 {
-    QStringList account = getCurrentAccount().split("@");
+    QString account = getCurrentAccount().at(0);
+    QStringList account_parse = account.split("@");
     connect(fetch_proc, SIGNAL(finished(int)), this, SLOT(refresh())); // doesn't work? wtf?!
-    askForPassword(account.at(1), "pop3", account.at(0));
+    askForPassword(account_parse.at(1), "pop3", account_parse.at(0));
     fetch_proc->startDetached(setting->getSettingsPath() + "start.sh");
 }
 
@@ -144,19 +163,20 @@ void MainWindow::askForPassword(QString server, QString protocol, QString userna
     if (ok && !text.isEmpty())
     {
         gen->fetchmailConfig(server, protocol, username, text);
-        gen->procmailConfig(getCurrentAccount()); // need to get parent, when focuse on incoming or trash or junk
-        gen->mhaExecutable(getCurrentAccount());
+        gen->procmailConfig(getCurrentAccount().at(0)); // need to get parent, when focuse on incoming or trash or junk
+        gen->mhaExecutable(getCurrentAccount().at(0));
     }
     else
     {
-        QMessageBox::critical(this, "CuteMail", "Can't connect to " + getCurrentAccount(), QMessageBox::Ok);
+        QMessageBox::critical(this, "CuteMail", "Can't connect to " + getCurrentAccount().at(0), QMessageBox::Ok);
     }
 }
 
 void MainWindow::on_treeView_clicked(const QModelIndex &index)
-{    
+{
     populateTable();
-    setWindowTitle(getCurrentAccount() + " - CuteMail");
+    setWindowTitle(getCurrentAccount().at(0) + " - CuteMail");
+    setting->setLastAccount(getCurrentAccount().at(0));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
