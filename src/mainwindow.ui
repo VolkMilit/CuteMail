@@ -120,6 +120,7 @@
    </attribute>
    <addaction name="actionFetch_mail"/>
    <addaction name="actionDelete"/>
+   <addaction name="actionRestore"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit_Ctrl_Q">
@@ -138,6 +139,17 @@
    </property>
    <property name="text">
     <string>Delete</string>
+   </property>
+  </action>
+  <action name="actionRestore">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Restore</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
  </widget>

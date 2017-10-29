@@ -36,6 +36,8 @@ private slots:
 
     void on_actionDelete_triggered();
 
+    void on_actionRestore_triggered();
+
 protected:
     void closeEvent(QCloseEvent *event);
 

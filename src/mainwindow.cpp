@@ -143,7 +143,9 @@ void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
     // in in the next version it will be replaced by
     // someting else, but no browser
     ui->webView->setUrl("file://" + tmp.at(item->row()));
+
     ui->actionDelete->setEnabled(true);
+    ui->actionRestore->setEnabled(true);
 }
 
 void MainWindow::on_actionFetch_mail_triggered()
@@ -176,8 +178,18 @@ void MainWindow::askForPassword(QString server, QString protocol, QString userna
 
 void MainWindow::on_treeView_clicked(const QModelIndex &index)
 {
+    if (getCurrentAccount().size() > 1)
+    {
+        if (getCurrentAccount().at(1) == "trash")
+            ui->actionRestore->setVisible(true);
+        else
+            ui->actionRestore->setVisible(false);
+    }
+
     populateTable();
     setWindowTitle(getCurrentAccount().at(0) + " - CuteMail");
+    ui->actionDelete->setEnabled(false);
+    ui->actionRestore->setEnabled(false);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -190,6 +202,14 @@ void MainWindow::on_actionDelete_triggered()
 {
     const int cr = ui->tb_mails->currentItem()->row();
     maild->move(tmp.at(cr), getCurrentAccount().at(0), "trash");
+    tmp.remove(cr);
+    ui->tb_mails->removeRow(cr);
+}
+
+void MainWindow::on_actionRestore_triggered()
+{
+    const int cr = ui->tb_mails->currentItem()->row();
+    maild->move(tmp.at(cr), getCurrentAccount().at(0), "incoming");
     tmp.remove(cr);
     ui->tb_mails->removeRow(cr);
 }
