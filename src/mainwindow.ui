@@ -119,6 +119,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionFetch_mail"/>
+   <addaction name="actionDelete"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit_Ctrl_Q">
@@ -129,6 +130,14 @@
   <action name="actionFetch_mail">
    <property name="text">
     <string>Fetch mail</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Delete</string>
    </property>
   </action>
  </widget>

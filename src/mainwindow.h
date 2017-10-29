@@ -34,6 +34,8 @@ private slots:
     void refresh();
     void on_treeView_clicked(const QModelIndex &index);
 
+    void on_actionDelete_triggered();
+
 protected:
     void closeEvent(QCloseEvent *event);
 

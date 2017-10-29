@@ -96,6 +96,7 @@ void MainWindow::writeSettings()
     setting->setTableHeadersWight(column_str);
     setting->setWindowDemention(QString::number(MainWindow::width()) + "x" + QString::number(MainWindow::height()));
     setting->setWindowFullscreen(QString::number(this->isMaximized()));
+    setting->setLastAccount(getCurrentAccount().at(0));
 }
 
 void MainWindow::populateTable()
@@ -142,6 +143,7 @@ void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
     // in in the next version it will be replaced by
     // someting else, but no browser
     ui->webView->setUrl("file://" + tmp.at(item->row()));
+    ui->actionDelete->setEnabled(true);
 }
 
 void MainWindow::on_actionFetch_mail_triggered()
@@ -156,9 +158,9 @@ void MainWindow::on_actionFetch_mail_triggered()
 void MainWindow::askForPassword(QString server, QString protocol, QString username)
 {
     bool ok;
-    QString text = QInputDialog::getText(this, tr("CuteMail"),
-                                            tr("Enter password for "), QLineEdit::Password,
-                                            "", &ok);
+    QString text = QInputDialog::getText(this, tr("CuteMail"), \
+                                            tr("Enter password for ") + getCurrentAccount().at(0), \
+                                         QLineEdit::Password, "", &ok);
 
     if (ok && !text.isEmpty())
     {
@@ -168,7 +170,7 @@ void MainWindow::askForPassword(QString server, QString protocol, QString userna
     }
     else
     {
-        QMessageBox::critical(this, "CuteMail", "Can't connect to " + getCurrentAccount().at(0), QMessageBox::Ok);
+        QMessageBox::critical(this, "CuteMail", tr("Couldn't connect to ") + getCurrentAccount().at(0), QMessageBox::Ok);
     }
 }
 
@@ -176,11 +178,18 @@ void MainWindow::on_treeView_clicked(const QModelIndex &index)
 {
     populateTable();
     setWindowTitle(getCurrentAccount().at(0) + " - CuteMail");
-    setting->setLastAccount(getCurrentAccount().at(0));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     event = nullptr; // shut up the compiller, whithout parametr function just not working
     writeSettings();
+}
+
+void MainWindow::on_actionDelete_triggered()
+{
+    const int cr = ui->tb_mails->currentItem()->row();
+    maild->move(tmp.at(cr), getCurrentAccount().at(0), "trash");
+    tmp.remove(cr);
+    ui->tb_mails->removeRow(cr);
 }
