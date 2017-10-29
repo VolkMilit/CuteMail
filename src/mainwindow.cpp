@@ -11,7 +11,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setupWindow();
     populateTreeView();
     setupWebView();
     readSettings();
@@ -23,6 +22,8 @@ MainWindow::~MainWindow()
 {
     delete gen;
     delete fetch_proc;
+    delete setting;
+    delete maild;
     delete ui;
 }
 
@@ -44,12 +45,6 @@ void MainWindow::populateTreeView()
     // hide unnecessary column
     for (int i = 1; i < 4; i++)
         ui->treeView->setColumnHidden(i, true);
-}
-
-void MainWindow::setupWindow()
-{
-    // I dunno, maybe it can be disabled throught gui in qtcreator?
-    ui->tb_mails->setEditTriggers(QAbstractItemView::NoEditTriggers); // disable edit mode
 }
 
 // there will be all webview-related settings
@@ -125,8 +120,6 @@ void MainWindow::refresh()
 
 void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
 {
-    ui->tb_mails->selectRow(item->row());
-
     // temporary solution for a couple of version,
     // in in the next version it will be replaced by
     // someting else, but no browser
@@ -161,9 +154,9 @@ void MainWindow::askForPassword(QString server, QString protocol, QString userna
 }
 
 void MainWindow::on_treeView_clicked(const QModelIndex &index)
-{
+{    
     populateTable();
-    setWindowTitle(index.data().toString() + " - CuteMail");
+    setWindowTitle(getCurrentAccount() + " - CuteMail");
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

@@ -36,8 +36,17 @@
         <enum>Qt::Vertical</enum>
        </property>
        <widget class="QTableWidget" name="tb_mails">
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
         <property name="alternatingRowColors">
          <bool>false</bool>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::SingleSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
         </property>
         <property name="showGrid">
          <bool>false</bool>

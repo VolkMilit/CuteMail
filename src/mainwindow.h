@@ -39,7 +39,6 @@ protected:
 
 private:
     void askForPassword(QString server, QString protocol, QString username);
-    void setupWindow();
     void setupWebView();
     void populateTreeView();
     void readSettings();
