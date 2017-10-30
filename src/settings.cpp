@@ -12,6 +12,15 @@ settings::~settings()
 
 }
 
+bool settings::settingsFile()
+{
+    QFile setting(settingsPath + settingsBase);
+    if (!setting.exists())
+        return false;
+    else
+        return true;
+}
+
 // [general]
 // TableHeadersWight
 void settings::setTableHeadersWight(QString value)

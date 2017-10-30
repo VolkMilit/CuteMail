@@ -33,9 +33,7 @@ private slots:
     void populateTable();
     void refresh();
     void on_treeView_clicked(const QModelIndex &index);
-
     void on_actionDelete_triggered();
-
     void on_actionRestore_triggered();
 
 protected:

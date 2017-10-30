@@ -48,7 +48,7 @@ QStringList MainWindow::getCurrentAccount()
     }
 }
 
-// this will populate tree view with model, but I still can't off extra fields
+// this will populate tree view with model
 void MainWindow::populateTreeView()
 {
     QFileSystemModel *model = new QFileSystemModel;
@@ -74,6 +74,12 @@ void MainWindow::setupWebView()
 
 void MainWindow::readSettings()
 {
+    if (!setting->settingsFile())
+    {
+        qDebug() << "Cannot read settings, create new one.";
+        writeSettings();
+    }
+
     const QString dem = setting->getWindowDemention();
     const QString max = setting->getWindowFullscreen();
     const QString column = setting->getTableHeadersWight();

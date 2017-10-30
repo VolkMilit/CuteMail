@@ -36,6 +36,8 @@ public:
     void setLastAccount(QString value);
     QString getLastAccount();
 
+    bool settingsFile();
+
 private:
     QString settingsPath;
     QString accauntsBase;
