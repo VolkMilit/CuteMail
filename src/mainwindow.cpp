@@ -156,7 +156,11 @@ void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
 
 void MainWindow::on_actionFetch_mail_triggered()
 {
-    QString account = getCurrentAccount().at(0);
+    QString account = getCurrentAccount().at(0);    
+
+    if (account == nullptr)
+        return;
+
     QStringList account_parse = account.split("@");
     connect(fetch_proc, SIGNAL(finished(int)), this, SLOT(refresh())); // doesn't work? wtf?!
     askForPassword(account_parse.at(1), "pop3", account_parse.at(0));
