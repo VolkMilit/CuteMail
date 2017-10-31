@@ -10,14 +10,13 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QFileSystemModel>
+#include <QItemSelection>
 
 #include "readmailbox.h"
 #include "generate.h"
 #include "maildir.h"
 
-namespace Ui {
-class MainWindow;
-}
+namespace Ui {class MainWindow;}
 
 class MainWindow : public QMainWindow
 {

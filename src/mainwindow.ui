@@ -30,6 +30,9 @@
          <height>0</height>
         </size>
        </property>
+       <property name="headerHidden">
+        <bool>true</bool>
+       </property>
       </widget>
       <widget class="QSplitter" name="splitter">
        <property name="orientation">

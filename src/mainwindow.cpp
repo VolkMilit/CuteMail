@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     populateTreeView();
     setupWebView();
     readSettings();
+    populateTable();
 
     fetch_proc = new QProcess(this);
 }
