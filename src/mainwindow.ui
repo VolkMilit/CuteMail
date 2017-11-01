@@ -109,7 +109,14 @@
     </property>
     <addaction name="actionExit_Ctrl_Q"/>
    </widget>
+   <widget class="QMenu" name="menuAccounts">
+    <property name="title">
+     <string>Accounts</string>
+    </property>
+    <addaction name="actionManage_accounts"/>
+   </widget>
    <addaction name="menuFIle"/>
+   <addaction name="menuAccounts"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
@@ -153,6 +160,11 @@
    </property>
    <property name="visible">
     <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionManage_accounts">
+   <property name="text">
+    <string>Manage accounts</string>
    </property>
   </action>
  </widget>

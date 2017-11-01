@@ -7,7 +7,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     gen(new generate()),
     setting(new settings()),
-    maild(new mailDir())
+    maild(new mailDir()),
+    accountswindow(new accountsWindow(parent))
 {
     ui->setupUi(this);
 
@@ -223,4 +224,9 @@ void MainWindow::on_actionRestore_triggered()
     maild->move(tmp.at(cr), getCurrentAccount().at(0), "incoming");
     tmp.remove(cr);
     ui->tb_mails->removeRow(cr);
+}
+
+void MainWindow::on_actionManage_accounts_triggered()
+{
+    accountswindow->show();
 }

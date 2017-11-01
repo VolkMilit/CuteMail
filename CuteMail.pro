@@ -30,7 +30,8 @@ SOURCES += src/main.cpp\
     src/fetchmail.cpp \
     src/mhonarc.cpp \
     src/settings.cpp \
-    src/maildir.cpp
+    src/maildir.cpp \
+    src/accountswindow.cpp
 
 HEADERS  += src/mainwindow.h \
     src/readmailbox.h \
@@ -38,6 +39,8 @@ HEADERS  += src/mainwindow.h \
     src/fetchmail.h \
     src/mhonarc.h \
     src/settings.h \
-    src/maildir.h
+    src/maildir.h \
+    src/accountswindow.h
 
-FORMS    += src/mainwindow.ui
+FORMS    += src/mainwindow.ui \
+    src/accountswindow.ui

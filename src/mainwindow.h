@@ -15,6 +15,7 @@
 #include "readmailbox.h"
 #include "generate.h"
 #include "maildir.h"
+#include "accountswindow.h"
 
 namespace Ui {class MainWindow;}
 
@@ -35,6 +36,8 @@ private slots:
     void on_actionDelete_triggered();
     void on_actionRestore_triggered();
 
+    void on_actionManage_accounts_triggered();
+
 protected:
     void closeEvent(QCloseEvent *event);
 
@@ -51,6 +54,7 @@ private:
     generate *gen;
     settings *setting;
     mailDir *maild;
+    accountsWindow *accountswindow;
 
     QProcess *fetch_proc;
 
