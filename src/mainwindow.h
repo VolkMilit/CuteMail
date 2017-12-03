@@ -16,6 +16,8 @@
 #include "generate.h"
 #include "maildir.h"
 #include "accountswindow.h"
+#include "qtreeviewhelper.h"
+#include "emlparser.h"
 
 namespace Ui {class MainWindow;}
 
@@ -51,10 +53,11 @@ private:
 
     Ui::MainWindow *ui;
     readMailbox *readmailbox;
-    generate *gen;
+    cmgenerate *gen;
     settings *setting;
     mailDir *maild;
     accountsWindow *accountswindow;
+    QTreeViewHelper *qtreeviewhelper;
 
     QProcess *fetch_proc;
 

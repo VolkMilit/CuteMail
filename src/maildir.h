@@ -22,7 +22,7 @@ public:
     void move(QString file_name, QString account_name, QString destenation_folder);
 
 private:
-    generate *gen;
+    cmgenerate *gen;
 };
 
 #endif // MAILDIR_H

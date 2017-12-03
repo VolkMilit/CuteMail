@@ -8,11 +8,11 @@
 
 #include "settings.h"
 
-class generate
+class cmgenerate
 {
 public:
-    generate();
-    ~generate();
+    cmgenerate();
+    ~cmgenerate();
     void procmailConfig(QString account_name);
     void fetchmailConfig(QString server, QString protocol, QString username, QString password);
     void fetchmailDelete();

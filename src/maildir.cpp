@@ -2,7 +2,7 @@
 #include <QDebug>
 
 mailDir::mailDir()
-    : gen(new generate())
+    : gen(new cmgenerate())
 {
 
 }
@@ -16,7 +16,7 @@ QVector<QString> mailDir::scanDir(QString dir)
 {
     QVector<QString> tmp;
 
-    QDirIterator it(dir, QStringList() << "*.html", QDir::Files);
+    QDirIterator it(dir, QStringList() << "*.eml", QDir::Files);
     while (it.hasNext())
         tmp.push_back(it.next());
 
@@ -30,6 +30,6 @@ void mailDir::move(QString file_name, QString account_name, QString destenation_
     const QString dir = gen->getMailFolderPath() + account_name + "/";
     QFile file(file_name);
     QFileInfo file_info(file_name);
-    file.copy(file_name, dir + destenation_folder + "/" + file_info.baseName() + ".html");
+    file.copy(file_name, dir + destenation_folder + "/" + file_info.baseName() + ".eml");
     file.remove();
 }

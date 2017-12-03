@@ -31,7 +31,7 @@ private:
     Ui::accountsWindow *ui;
 
     settings *setting;
-    generate *gen;
+    cmgenerate *gen;
 
     QString prevAccount;
 };

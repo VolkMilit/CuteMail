@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets webkit webkitwidgets
 TARGET = CuteMail
 TEMPLATE = app
 CONFIG += c++11
+LIBS += -lmimetic
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -27,20 +28,20 @@ SOURCES += src/main.cpp\
         src/mainwindow.cpp \
     src/readmailbox.cpp \
     src/generate.cpp \
-    src/fetchmail.cpp \
-    src/mhonarc.cpp \
     src/settings.cpp \
     src/maildir.cpp \
-    src/accountswindow.cpp
+    src/accountswindow.cpp \
+    src/qtreeviewhelper.cpp \
+    src/emlparser.cpp
 
 HEADERS  += src/mainwindow.h \
     src/readmailbox.h \
     src/generate.h \
-    src/fetchmail.h \
-    src/mhonarc.h \
     src/settings.h \
     src/maildir.h \
-    src/accountswindow.h
+    src/accountswindow.h \
+    src/qtreeviewhelper.h \
+    src/emlparser.h
 
 FORMS    += src/mainwindow.ui \
     src/accountswindow.ui

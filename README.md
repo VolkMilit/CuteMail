@@ -1,7 +1,7 @@
 # CuteMail
 All mail clients suck. This one just sucks less. (c) circa (mutt)
 
-WIP shell for fetchmail, mta and MHonArc, fast mail client.
+Yet another frontend for libetpan - fast mail client.
 
 ### Why?
 Because every mail clients sucks. Nuff said. 
@@ -23,11 +23,8 @@ Creating:
 ### Dependencies
 - Qt5
 - Compiller with C++11 support
-- Fetchmail
-- Procmail
-- MHonArc (may be depricated in future update)
-
-MTA (e.g. Procmail) will be configured in future update. For example: default MTA in Debian (and maybe *buntu-like) is Exim, so we need to use it.
+- libetpan
+- libmimetic
 
 ### LICENSE
 See LICENSE in root repository.

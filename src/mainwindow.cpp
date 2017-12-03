@@ -5,10 +5,11 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    gen(new generate()),
+    gen(new cmgenerate()),
     setting(new settings()),
     maild(new mailDir()),
-    accountswindow(new accountsWindow(parent))
+    accountswindow(new accountsWindow(parent)),
+    qtreeviewhelper(new QTreeViewHelper())
 {
     ui->setupUi(this);
 
@@ -56,6 +57,7 @@ void MainWindow::populateTreeView()
     QFileSystemModel *model = new QFileSystemModel;
     model->setRootPath(gen->getMailFolderPath());
     model->setFilter(QDir::NoDotAndDotDot | QDir::Dirs);
+
     ui->treeView->setModel(model);
     ui->treeView->setRootIndex(model->index(gen->getMailFolderPath()));
 
@@ -116,18 +118,20 @@ void MainWindow::populateTable()
         tmp.append(maild->scanDir(gen->getMailFolderPath() + getCurrentAccount().at(0)
                                   + "/" + getCurrentAccount().at(1)));
     else                                 // we're just focuse on account name, so fallback to default
-        tmp.append(maild->scanDir(gen->getMailFolderPath() + getCurrentAccount().at(0) + "/incoming"));
+        tmp.append(maild->scanDir(gen->getMailFolderPath() + getCurrentAccount().at(0) + "/incoming"));    
 
-    for (int i = 0; i < tmp.size(); i++)
+    for (auto i = 0; i < tmp.size(); i++)
     {
+        emlparser eml(tmp.at(i));
+
         QTableWidgetItem *item1 = new QTableWidgetItem;
-        item1->setText(readmailbox->readSubject(tmp.at(i)));
+        item1->setText(eml.getSubject());
 
         QTableWidgetItem *item2 = new QTableWidgetItem;
-        item2->setText(readmailbox->readFrom(tmp.at(i)));
+        item2->setText(eml.getFrom());
 
         QTableWidgetItem *item3 = new QTableWidgetItem;
-        item3->setText(readmailbox->readDate(tmp.at(i)));
+        item3->setText(eml.getDate());
 
         ui->tb_mails->insertRow(i);
 
@@ -147,10 +151,13 @@ void MainWindow::refresh()
 
 void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
 {
+    emlparser eml(this->tmp.at(item->row()));
+    eml.generateTmpHtml();
+
     // temporary solution for a couple of version,
     // in in the next version it will be replaced by
     // someting else, but no browser
-    ui->webView->setUrl("file://" + tmp.at(item->row()));
+    ui->webView->setUrl(QUrl("file://" + QDir::homePath() + "/.cache/cutemail-tmp.html"));
 
     ui->actionDelete->setEnabled(true);
     ui->actionRestore->setEnabled(true);
@@ -158,15 +165,15 @@ void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
 
 void MainWindow::on_actionFetch_mail_triggered()
 {
-    QString account = getCurrentAccount().at(0);    
+    /*QString account = getCurrentAccount().at(0);
 
     if (account == nullptr)
         return;
 
     QStringList account_parse = account.split("@");
     connect(fetch_proc, SIGNAL(finished(int)), this, SLOT(refresh())); // doesn't work? wtf?!
-    askForPassword(account_parse.at(1), "pop3", account_parse.at(0));
-    fetch_proc->startDetached(setting->getSettingsPath() + "start.sh");
+    askForPassword(account_parse.at(1), "imap", account_parse.at(0));
+    fetch_proc->startDetached(setting->getSettingsPath() + "start.sh");*/
 }
 
 void MainWindow::askForPassword(QString server, QString protocol, QString username)

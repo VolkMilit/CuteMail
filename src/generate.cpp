@@ -1,6 +1,6 @@
 #include "generate.h"
 
-generate::generate() :
+cmgenerate::cmgenerate() :
     setting(new settings())
 {
     fetchmailConfigPath = QDir::homePath() + "/.fetchmailrc";
@@ -8,12 +8,12 @@ generate::generate() :
     mailFolderPath = QDir::homePath() + "/mail/"; // will be configurable
 }
 
-generate::~generate()
+cmgenerate::~cmgenerate()
 {
     delete setting;
 }
 
-QString generate::getMailFolderPath()
+QString cmgenerate::getMailFolderPath()
 {
     return mailFolderPath;
 }
@@ -23,7 +23,7 @@ QString generate::getMailFolderPath()
 // https://www.mhonarc.org/MHonArc/doc/resources.html
 // need to look closely, but I think we can generate file
 // btw for the first prototipe version this is better solution to not fuck everyting up
-void generate::mhaExecutable(QString account_name)
+void cmgenerate::mhaExecutable(QString account_name)
 {
     const QString dirTmp = QDir::homePath() + "/mail/" + account_name + "/out/*";
     const QString dirIncoming = QDir::homePath() + "/mail/" + account_name + "/incoming/";
@@ -43,7 +43,7 @@ void generate::mhaExecutable(QString account_name)
     file.close();
 }
 
-void generate::deleteExecutable()
+void cmgenerate::deleteExecutable()
 {
     QFile file(setting->getSettingsPath() + "start.sh");
 
@@ -51,7 +51,7 @@ void generate::deleteExecutable()
         file.remove();
 }
 
-void generate::accauntsFolders(QString account_name)
+void cmgenerate::accauntsFolders(QString account_name)
 {
     QDir account(mailFolderPath + account_name);
     QDir account_incoming(mailFolderPath + account_name + "/incoming");
@@ -72,7 +72,7 @@ void generate::accauntsFolders(QString account_name)
 }
 
 // -------- procmail -------- //
-void generate::procmailDelete()
+void cmgenerate::procmailDelete()
 {
     QFile file(procmailConfigPath);
 
@@ -97,7 +97,7 @@ void generate::procmailDelete()
 // so user can decide, when (s)he need to delete or restore
 // mail from junk
 // P.S. they have json file, so maybe we shall parse json
-void generate::createProcmailConfig(QString account_name)
+void cmgenerate::createProcmailConfig(QString account_name)
 {
     QFile file(procmailConfigPath);
     if (file.open(QIODevice::ReadWrite))
@@ -109,7 +109,7 @@ void generate::createProcmailConfig(QString account_name)
     file.close();
 }
 
-void generate::procmailConfig(QString path)
+void cmgenerate::procmailConfig(QString path)
 {
     QFile file(procmailConfigPath);
 
@@ -120,7 +120,7 @@ void generate::procmailConfig(QString path)
 // -------------------------- //
 
 // -------- fetchmail -------- //
-void generate::fetchmailDelete()
+void cmgenerate::fetchmailDelete()
 {
     QFile file(fetchmailConfigPath);
 
@@ -128,7 +128,7 @@ void generate::fetchmailDelete()
         file.remove();
 }
 
-void generate::createFetchFile(QString server, QString protocol, QString username, QString password)
+void cmgenerate::createFetchFile(QString server, QString protocol, QString username, QString password)
 {
     QFile file(fetchmailConfigPath);
     if (file.open(QIODevice::ReadWrite))
@@ -146,7 +146,7 @@ void generate::createFetchFile(QString server, QString protocol, QString usernam
     file.close();
 }
 
-void generate::fetchmailConfig(QString server, QString protocol, QString username, QString password)
+void cmgenerate::fetchmailConfig(QString server, QString protocol, QString username, QString password)
 {
     QFile file(fetchmailConfigPath);
 
