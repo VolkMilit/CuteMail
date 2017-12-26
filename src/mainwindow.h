@@ -12,12 +12,12 @@
 #include <QFileSystemModel>
 #include <QItemSelection>
 
-#include "readmailbox.h"
 #include "generate.h"
 #include "maildir.h"
 #include "accountswindow.h"
 #include "qtreeviewhelper.h"
 #include "emlparser.h"
+#include "mailfetch.h"
 
 namespace Ui {class MainWindow;}
 
@@ -51,15 +51,12 @@ private:
     void writeSettings();
     QStringList getCurrentAccount();
 
-    Ui::MainWindow *ui;
-    readMailbox *readmailbox;
+    Ui::MainWindow *ui;   
     cmgenerate *gen;
     settings *setting;
     mailDir *maild;
     accountsWindow *accountswindow;
     QTreeViewHelper *qtreeviewhelper;
-
-    QProcess *fetch_proc;
 
     QVector<QString> tmp;
 };

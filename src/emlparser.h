@@ -32,6 +32,7 @@ private:
     bool isMultipart();
     QString getBoundary();
     void splitMultipartMsg();
+    QString getHeaderValue(const std::string &field);
 };
 
 #endif // EMLPARSER_H

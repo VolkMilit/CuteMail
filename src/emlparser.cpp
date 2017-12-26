@@ -5,7 +5,12 @@ emlparser::emlparser(QString path)
 {
     this->msg = path;
 }
-emlparser::~emlparser(){}
+
+emlparser::~emlparser()
+{
+    QFile file(QDir::homePath() + "/.cache/cutemail-tmp.html");
+    file.remove();
+}
 
 QString emlparser::getBoundary()
 {
@@ -41,7 +46,7 @@ bool emlparser::isMultipart()
 }
 
 void emlparser::splitMultipartMsg()
-{
+{   
     QString tmp;
     int idx = 0;
 
@@ -81,6 +86,8 @@ void emlparser::splitMultipartMsg()
 
 void emlparser::generateTmpHtml()
 {
+    //std::string ttt;
+
     int ignoreMask = 0;
     ignoreMask += mimetic::imHeader;
     ignoreMask += mimetic::imChildParts;
@@ -88,6 +95,9 @@ void emlparser::generateTmpHtml()
     mimetic::File test(this->msg.toStdString());
     mimetic::MimeEntity me;
     me.load(test.begin(), test.end(), ignoreMask);
+
+    //mimetic::Base64::Decoder b64;
+    //mimetic::code(test.begin(), test.end(), b64, ttt);
 
     QFile file(QDir::homePath() + "/.cache/cutemail-tmp.html");
 
@@ -98,6 +108,7 @@ void emlparser::generateTmpHtml()
         return;
 
     QTextStream out(&file);
+    out.setCodec("UTF-8");
     out << QString::fromUtf8(me.body().data()); // need to get document encoding, but...
                                                 // well, nobody using anything exept uft8 nowadays
 
@@ -107,52 +118,29 @@ void emlparser::generateTmpHtml()
     {
         splitMultipartMsg();
     }
-}
 
-QString emlparser::getTo()
-{
-    return ""; //To: ...
+    //std::cout << ttt << std::endl;
 }
 
 QString emlparser::getFrom()
 {
-    mimetic::File in(this->msg.toStdString());
+    // there is a "bug", only first part parsing
+    return getHeaderValue("From");
+}
 
-    mimetic::MimeEntity me(in.begin(), in.end());
-    mimetic::MimeEntity* pMe = &me;
-
-    mimetic::Header& h = pMe->header();
-
-    std::string src = h.from().str();
-
-    // need to decode base64 here, but all I have is broken utf8
-    // don't know, what I'm doing wrong
-    /*try
-    {
-        std::string sp = "";
-        sp = split(src, '?').at(2);
-
-        if (!sp.empty())
-        {
-            std::string got;
-            mimetic::Base64::Decoder base64;
-            base64.process(src.begin(), src.end(), std::back_inserter<std::string>(got));
-            return QString::fromStdString(got);
-        }
-    }
-    catch(...){}*/
-
-    return QString::fromStdString(src);
+QString emlparser::getTo()
+{
+    return getHeaderValue("To");
 }
 
 QString emlparser::getDate()
 {
-    return ""; //Date: ...
+    return getHeaderValue("Date");
 }
 
 QString emlparser::getSubject()
 {
-    return ""; //Subject: ...
+    return getHeaderValue("Subject");
 }
 
 std::vector<std::string> emlparser::split(const std::string &s, char delim)
@@ -165,4 +153,39 @@ std::vector<std::string> emlparser::split(const std::string &s, char delim)
         elems.push_back(item);
 
     return elems;
+}
+
+QString emlparser::getHeaderValue(const std::string &field)
+{
+    mimetic::File in(this->msg.toStdString());
+
+    mimetic::MimeEntity me(in.begin(), in.end());
+    mimetic::MimeEntity* pMe = &me;
+
+    mimetic::Header& h = pMe->header();
+
+    std::string src = h.field(field).value();
+
+    if (src.at(0) == '=')
+    {
+        try
+        {
+            std::string s = split(src, '?').at(3);
+
+            if (!s.empty())
+            {
+                std::string got;
+                mimetic::Base64::Decoder base64;
+                mimetic::code(s.begin(), s.end(), base64, std::back_inserter<std::string>(got));
+
+                return QString::fromStdString(got);
+            }
+        }
+        catch(...)
+        {
+            qDebug() << "Failed to encode";
+        }
+    }
+
+    return QString::fromStdString(src);
 }

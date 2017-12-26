@@ -12,6 +12,7 @@ TARGET = CuteMail
 TEMPLATE = app
 CONFIG += c++11
 LIBS += -lmimetic
+LIBS += -letpan
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -26,22 +27,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += src/main.cpp\
         src/mainwindow.cpp \
-    src/readmailbox.cpp \
     src/generate.cpp \
     src/settings.cpp \
     src/maildir.cpp \
     src/accountswindow.cpp \
     src/qtreeviewhelper.cpp \
-    src/emlparser.cpp
+    src/emlparser.cpp \
+    src/mailfetch.cpp
 
 HEADERS  += src/mainwindow.h \
-    src/readmailbox.h \
     src/generate.h \
     src/settings.h \
     src/maildir.h \
     src/accountswindow.h \
     src/qtreeviewhelper.h \
-    src/emlparser.h
+    src/emlparser.h \
+    src/mailfetch.h
 
 FORMS    += src/mainwindow.ui \
     src/accountswindow.ui

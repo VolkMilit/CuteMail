@@ -17,15 +17,11 @@ MainWindow::MainWindow(QWidget *parent) :
     setupWebView();
     readSettings();
     populateTable();
-
-    fetch_proc = new QProcess(this);
 }
 
 MainWindow::~MainWindow()
 {
     tmp.clear(); // just in case
-
-    delete fetch_proc;
 
     delete gen;
     delete setting;
@@ -70,10 +66,15 @@ void MainWindow::populateTreeView()
 // todo: probably javascript still may be executing, need to off it down
 void MainWindow::setupWebView()
 {
+    ui->webView->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
+    ui->webView->settings()->setAttribute(QWebSettings::JavaEnabled, false);
+    ui->webView->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
+    ui->webView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, false);
     ui->webView->settings()->setMaximumPagesInCache(0);
     ui->webView->settings()->setOfflineStorageDefaultQuota(0);
     ui->webView->settings()->setObjectCacheCapacities(0, 0, 0);
     ui->webView->settings()->setOfflineWebApplicationCacheQuota(0);
+    ui->webView->settings()->setDefaultTextEncoding("utf-8");
 }
 
 void MainWindow::readSettings()
@@ -143,9 +144,6 @@ void MainWindow::populateTable()
 
 void MainWindow::refresh()
 {
-    gen->fetchmailDelete();
-    gen->procmailDelete();
-    gen->deleteExecutable();
     populateTable();
 }
 
@@ -174,6 +172,11 @@ void MainWindow::on_actionFetch_mail_triggered()
     connect(fetch_proc, SIGNAL(finished(int)), this, SLOT(refresh())); // doesn't work? wtf?!
     askForPassword(account_parse.at(1), "imap", account_parse.at(0));
     fetch_proc->startDetached(setting->getSettingsPath() + "start.sh");*/
+
+    QString account = getCurrentAccount().at(0);
+    QStringList account_parse = account.split("@");
+
+    this->askForPassword(account_parse.at(1), "imap", account_parse.at(0));
 }
 
 void MainWindow::askForPassword(QString server, QString protocol, QString username)
@@ -185,9 +188,8 @@ void MainWindow::askForPassword(QString server, QString protocol, QString userna
 
     if (ok && !text.isEmpty())
     {
-        gen->fetchmailConfig(server, protocol, username, text);
-        gen->procmailConfig(getCurrentAccount().at(0)); // need to get parent, when focuse on incoming or trash or junk
-        gen->mhaExecutable(getCurrentAccount().at(0));
+        mailfetch mf(username + "@" + server, protocol + "." + server, text);
+        //return;
     }
     else
     {
