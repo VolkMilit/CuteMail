@@ -23,7 +23,7 @@ QString emlparser::getBoundary()
 
     if (h.contentType().isMultipart()) // \/ yeah, this sucks, thanks to qt
     {
-        std::string ret = split(h.contentType().str(), '=').at(1);
+        std::string ret = stdSplit(h.contentType().str(), '=').at(1);
         return QString::fromStdString(ret).remove("\"");
     }
 
@@ -147,18 +147,6 @@ QString emlparser::getSubject()
     return getHeaderValue("Subject");
 }
 
-std::vector<std::string> emlparser::split(const std::string &s, char delim)
-{
-    std::stringstream ss(s);
-    std::string item;
-    std::vector<std::string> elems;
-
-    while (std::getline(ss, item, delim))
-        elems.push_back(item);
-
-    return elems;
-}
-
 QString emlparser::getHeaderValue(const std::string &field)
 {
     mimetic::File in(this->msg.toStdString());
@@ -174,23 +162,17 @@ QString emlparser::getHeaderValue(const std::string &field)
     {
         try
         {
-            std::string enconding = split(src, '?').at(2);
-            std::string s = split(src, '?').at(3);
+            const std::string &enconding = stdSplit(src, '?').at(2);
+            std::string s = stdSplit(src, '?').at(3);
 
             if (!s.empty())
             {
                 std::string got;
 
                 if (enconding == "q" || enconding == "Q")
-                {
-                    mimetic::QP::Decoder qp;
-                    mimetic::code(s.begin(), s.end(), qp, std::back_inserter<std::string>(got));
-                }
+                    got = decodeQP(s);
                 else
-                {
-                    mimetic::Base64::Decoder base64;
-                    mimetic::code(s.begin(), s.end(), base64, std::back_inserter<std::string>(got));
-                }
+                    got = decodeB64(s);
 
                 return QString::fromStdString(got);
             }

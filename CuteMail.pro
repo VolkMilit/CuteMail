@@ -33,7 +33,8 @@ SOURCES += src/main.cpp\
     src/accountswindow.cpp \
     src/qtreeviewhelper.cpp \
     src/emlparser.cpp \
-    src/mailfetch.cpp
+    src/mailfetch.cpp \
+    src/utils.cpp
 
 HEADERS  += src/mainwindow.h \
     src/generate.h \
@@ -42,7 +43,8 @@ HEADERS  += src/mainwindow.h \
     src/accountswindow.h \
     src/qtreeviewhelper.h \
     src/emlparser.h \
-    src/mailfetch.h
+    src/mailfetch.h \
+    src/utils.h
 
 FORMS    += src/mainwindow.ui \
     src/accountswindow.ui

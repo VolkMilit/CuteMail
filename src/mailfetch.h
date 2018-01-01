@@ -17,8 +17,9 @@ extern "C" {
 #endif
 
 #include "generate.h"
+#include "utils.h"
 
-class mailfetch
+class mailfetch : protected utils
 {
 public:
     mailfetch(QString account, QString server, QString password);

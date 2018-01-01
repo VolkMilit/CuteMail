@@ -10,30 +10,13 @@ mailfetch::mailfetch(QString account, QString server, QString password) :
     struct mailimap * imap;
     int r;
 
-    /*
-        Note that it is necessary to store the bytearray
-        before you call data() on it,  a call like the following:
-        const char *c_str2 = str2.toLatin1().data();
-        will make the application crash as the QByteArray has not
-        been stored and hence no longer exists
-
-        from: https://stackoverflow.com/questions/5505221/converting-qstring-to-char
-    */
-    QByteArray serverraw = server.toLatin1();
-    const char *c_server = serverraw.data();
-
-    QByteArray passraw = password.toLatin1();
-    const char *c_pass = passraw.data();
-
-    QByteArray accraw = account.toLatin1();
-    const char *c_acc = accraw.data();
-
-    //mkdir("download", 0700);
-
+    const char *c_server = toCChar(server);
+    const char *c_pass = toCChar(password);
+    const char *c_acc = toCChar(account);
 
     imap = mailimap_new(0, NULL);
     r = mailimap_ssl_connect(imap, c_server, 993);
-    //fprintf(stderr, "connect: %i\n", r);
+
     this->checkError(r, "Could not connect to server.");
 
     r = mailimap_login(imap, c_acc, c_pass);
@@ -160,11 +143,8 @@ void mailfetch::checkError(int r, QString msg)
     if (r == MAILIMAP_NO_ERROR_NON_AUTHENTICATED)
         return;
 
-    //fprintf(stderr, "%s\n", msg);
     QWidget *parent = 0;
     QMessageBox::critical(parent, "CuteMail Error", msg, QMessageBox::Ok);
-
-    exit(EXIT_FAILURE);
 }
 
 char* mailfetch::get_msg_att_msg_content(mailimap_msg_att *msg_att, size_t *p_msg_size)
@@ -230,7 +210,6 @@ uint32_t mailfetch::get_uid(mailimap_msg_att *msg_att)
 
         if (item->att_type != MAILIMAP_MSG_ATT_ITEM_STATIC)
             continue;
-
 
         if (item->att_data.att_static->att_type != MAILIMAP_MSG_ATT_UID)
             continue;
