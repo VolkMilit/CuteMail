@@ -48,6 +48,7 @@ bool emlparser::isMultipart()
 void emlparser::splitMultipartMsg()
 {   
     QString tmp;
+    std::string tmp_std;
     int idx = 0;
 
     QFile file(QDir::homePath() + "/.cache/cutemail-tmp.html");
@@ -57,11 +58,13 @@ void emlparser::splitMultipartMsg()
 
     QTextStream out(&file);
 
+    QString bound = getBoundary();
+
     while (!out.atEnd())
     {
         QString line = out.readLine();
 
-        if ("--" + getBoundary() == line && idx < 2)
+        if ("--" + bound == line && idx < 2)
             idx += 1;
 
         if (idx >= 2)
@@ -79,15 +82,22 @@ void emlparser::splitMultipartMsg()
     int idxOf = tmp.indexOf("<");
     tmp.remove(0, idxOf);
 
-    out << tmp;
+    /*try
+    {
+        mimetic::QP::Decoder qp;
+        mimetic::code(tmp.toStdString().begin(), tmp.toStdString().end(), qp, std::back_inserter<std::string>(tmp_std));
+        out << QString::fromStdString(tmp_std);
+    }
+    catch(...)
+    {*/
+        out << tmp;
+    //}
 
     file.close();
 }
 
 void emlparser::generateTmpHtml()
 {
-    //std::string ttt;
-
     int ignoreMask = 0;
     ignoreMask += mimetic::imHeader;
     ignoreMask += mimetic::imChildParts;
@@ -95,9 +105,6 @@ void emlparser::generateTmpHtml()
     mimetic::File test(this->msg.toStdString());
     mimetic::MimeEntity me;
     me.load(test.begin(), test.end(), ignoreMask);
-
-    //mimetic::Base64::Decoder b64;
-    //mimetic::code(test.begin(), test.end(), b64, ttt);
 
     QFile file(QDir::homePath() + "/.cache/cutemail-tmp.html");
 
@@ -109,8 +116,7 @@ void emlparser::generateTmpHtml()
 
     QTextStream out(&file);
     out.setCodec("UTF-8");
-    out << QString::fromUtf8(me.body().data()); // need to get document encoding, but...
-                                                // well, nobody using anything exept uft8 nowadays
+    out << QString::fromUtf8(me.body().data());
 
     file.close();
 
@@ -118,8 +124,6 @@ void emlparser::generateTmpHtml()
     {
         splitMultipartMsg();
     }
-
-    //std::cout << ttt << std::endl;
 }
 
 QString emlparser::getFrom()
@@ -170,13 +174,23 @@ QString emlparser::getHeaderValue(const std::string &field)
     {
         try
         {
+            std::string enconding = split(src, '?').at(2);
             std::string s = split(src, '?').at(3);
 
             if (!s.empty())
             {
                 std::string got;
-                mimetic::Base64::Decoder base64;
-                mimetic::code(s.begin(), s.end(), base64, std::back_inserter<std::string>(got));
+
+                if (enconding == "q" || enconding == "Q")
+                {
+                    mimetic::QP::Decoder qp;
+                    mimetic::code(s.begin(), s.end(), qp, std::back_inserter<std::string>(got));
+                }
+                else
+                {
+                    mimetic::Base64::Decoder base64;
+                    mimetic::code(s.begin(), s.end(), base64, std::back_inserter<std::string>(got));
+                }
 
                 return QString::fromStdString(got);
             }
