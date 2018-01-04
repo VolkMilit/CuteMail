@@ -64,12 +64,12 @@ std::string utils::decodeB64(const std::string &str)
 
     from: https://stackoverflow.com/questions/5505221/converting-qstring-to-char
 */
-const char *toCChar(QString str)
+const char *utils::toCChar(QString qstr)
 {
-    QByteArray raw = str.toLatin1();
-    const char *c_str = raw.data();
+    QByteArray qbraw = qstr.toLatin1();
+    const char *cc_str = qbraw.data();
 
-    return c_str;
+    return cc_str;
 }
 
 std::vector<std::string> utils::stdSplit(const std::string &str, char delim)
@@ -82,4 +82,10 @@ std::vector<std::string> utils::stdSplit(const std::string &str, char delim)
         elems.push_back(item);
 
     return elems;
+}
+
+QTextStream &utils::QStdErr()
+{
+    static QTextStream ts(stderr);
+    return ts;
 }

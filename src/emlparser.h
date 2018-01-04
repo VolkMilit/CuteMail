@@ -15,7 +15,7 @@
 
 #include "utils.h"
 
-class emlparser : protected utils
+class emlparser : private utils
 {
 public:
     emlparser(QString path);

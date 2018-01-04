@@ -4,6 +4,8 @@
 #include <QString>
 #include <QDir>
 #include <QMessageBox>
+#include <QDebug>
+
 #include <iostream>
 
 #ifdef __cplusplus
@@ -19,7 +21,7 @@ extern "C" {
 #include "generate.h"
 #include "utils.h"
 
-class mailfetch : protected utils
+class mailfetch : private utils
 {
 public:
     mailfetch(QString account, QString server, QString password);

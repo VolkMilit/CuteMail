@@ -46,9 +46,8 @@ bool emlparser::isMultipart()
 }
 
 void emlparser::splitMultipartMsg()
-{   
+{
     QString tmp;
-    std::string tmp_std;
     int idx = 0;
 
     QFile file(QDir::homePath() + "/.cache/cutemail-tmp.html");
@@ -82,16 +81,7 @@ void emlparser::splitMultipartMsg()
     int idxOf = tmp.indexOf("<");
     tmp.remove(0, idxOf);
 
-    /*try
-    {
-        mimetic::QP::Decoder qp;
-        mimetic::code(tmp.toStdString().begin(), tmp.toStdString().end(), qp, std::back_inserter<std::string>(tmp_std));
-        out << QString::fromStdString(tmp_std);
-    }
-    catch(...)
-    {*/
-        out << tmp;
-    //}
+    out << tmp;
 
     file.close();
 }
@@ -162,7 +152,7 @@ QString emlparser::getHeaderValue(const std::string &field)
     {
         try
         {
-            const std::string &enconding = stdSplit(src, '?').at(2);
+            std::string enconding = stdSplit(src, '?').at(2);
             std::string s = stdSplit(src, '?').at(3);
 
             if (!s.empty())

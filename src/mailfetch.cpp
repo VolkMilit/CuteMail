@@ -33,7 +33,7 @@ mailfetch::mailfetch(QString account, QString server, QString password) :
 
 mailfetch::~mailfetch()
 {
-
+    delete gen;
 }
 
 void mailfetch::fetch_messages(mailimap *imap, const char *account)
@@ -78,23 +78,24 @@ void mailfetch::fetch_msg(mailimap *imap, uint32_t uid, const char *account)
 {
     struct mailimap_set * set;
     struct mailimap_section * section;
-    char filename[512];
+    //char filename[512];
     size_t msg_len;
     char * msg_content;
-    FILE * f;
+    //FILE * f;
     struct mailimap_fetch_type * fetch_type;
     struct mailimap_fetch_att * fetch_att;
     int r;
     clist * fetch_result;
-    struct stat stat_info;
+    //struct stat stat_info;
 
-    snprintf(filename, sizeof(filename), "mail/%s/incoming/%u.eml", (char*)account, (unsigned int) uid);
-    r = stat(filename, &stat_info);
+    QString filename = "mail/" + QString(account) + "/incoming/" + (unsigned int) uid + ".eml";
+    QFile f(filename);
+    //snprintf(filename, sizeof(filename), "mail/%s/incoming/%u.eml", (char*)account, (unsigned int) uid);
+    //r = stat(fn.toStdString().c_str(), &stat_info);
 
-    if (r == 0)
+    if (f.exists())
     {
-        // already cached
-        printf("%u is already fetched\n", (unsigned int) uid);
+        qDebug() << (unsigned int) uid << " is already fetched";
         return;
     }
 
@@ -106,28 +107,32 @@ void mailfetch::fetch_msg(mailimap *imap, uint32_t uid, const char *account)
 
     r = mailimap_uid_fetch(imap, set, fetch_type, &fetch_result);
     this->checkError(r, "Could not fetch messages.");
-    printf("fetch %u\n", (unsigned int) uid);
+    qDebug() << "fetch " << (unsigned int) uid;
 
     msg_content = get_msg_content(fetch_result, &msg_len);
     if (msg_content == NULL)
     {
-        fprintf(stderr, "no content\n");
+        QStdErr() << "no content";
         mailimap_fetch_list_free(fetch_result);
         return;
     }
 
-    f = fopen(filename, "w");
-    if (f == NULL)
+    //f = fopen(filename, "w");
+    if (f.open(QIODevice::ReadWrite))
     {
-        fprintf(stderr, "could not write\n");
+        f.write(msg_content, msg_len);
+    }
+    else
+    {
+        QStdErr() << "could not write";
         mailimap_fetch_list_free(fetch_result);
-        return;
     }
 
-    fwrite(msg_content, 1, msg_len, f);
-    fclose(f);
+    //fwrite(msg_content, 1, msg_len, f);
+    //fclose(f);
+    f.close();
 
-    printf("%u has been fetched\n", (unsigned int) uid);
+    qDebug() << (unsigned int) uid << " has been fetched";
 
     mailimap_fetch_list_free(fetch_result);
 }
