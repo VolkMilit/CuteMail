@@ -10,22 +10,22 @@ mailfetch::mailfetch(QString account, QString server, QString password) :
     struct mailimap * imap;
     int r;
 
-    const char *c_server = toCChar(server);
-    const char *c_pass = toCChar(password);
-    const char *c_acc = toCChar(account);
-
     imap = mailimap_new(0, NULL);
-    r = mailimap_ssl_connect(imap, c_server, 993);
+    r = mailimap_ssl_connect(imap, server.toStdString().c_str(), 993);
 
-    this->checkError(r, "Could not connect to server.");
+    if (this->checkError(r, "Could not connect to server.") < 0)
+        return;
 
-    r = mailimap_login(imap, c_acc, c_pass);
-    this->checkError(r, "Could not login.");
+    r = mailimap_login(imap, account.toStdString().c_str(), password.toStdString().c_str());
+    if (this->checkError(r, "Could not login.") < 0)
+        return;
 
     r = mailimap_select(imap, "INBOX");
-    this->checkError(r, "Could not select INBOX.");
 
-    this->fetch_messages(imap, c_acc);
+    if (this->checkError(r, "Could not select INBOX.") < 0)
+        return;
+
+    this->fetch_messages(imap, account.toStdString().c_str());
 
     mailimap_logout(imap);
     mailimap_free(imap);
@@ -88,7 +88,7 @@ void mailfetch::fetch_msg(mailimap *imap, uint32_t uid, const char *account)
     clist * fetch_result;
     //struct stat stat_info;
 
-    QString filename = "mail/" + QString(account) + "/incoming/" + (unsigned int) uid + ".eml";
+    QString filename = "mail/" + QString(account) + "/incoming/" + QString::number(uid) + ".eml";
     QFile f(filename);
     //snprintf(filename, sizeof(filename), "mail/%s/incoming/%u.eml", (char*)account, (unsigned int) uid);
     //r = stat(fn.toStdString().c_str(), &stat_info);
@@ -137,19 +137,21 @@ void mailfetch::fetch_msg(mailimap *imap, uint32_t uid, const char *account)
     mailimap_fetch_list_free(fetch_result);
 }
 
-void mailfetch::checkError(int r, QString msg)
+int mailfetch::checkError(int r, QString msg)
 {
     if (r == MAILIMAP_NO_ERROR)
-        return;
+        return 0;
 
     if (r == MAILIMAP_NO_ERROR_AUTHENTICATED)
-        return;
+        return 0;
 
     if (r == MAILIMAP_NO_ERROR_NON_AUTHENTICATED)
-        return;
+        return 0;
 
     QWidget *parent = 0;
     QMessageBox::critical(parent, "CuteMail Error", msg, QMessageBox::Ok);
+
+    return -1;
 }
 
 char* mailfetch::get_msg_att_msg_content(mailimap_msg_att *msg_att, size_t *p_msg_size)
