@@ -89,6 +89,7 @@
          </url>
         </property>
        </widget>
+       <widget class="QTextBrowser" name="textBrowser"/>
       </widget>
      </widget>
     </item>

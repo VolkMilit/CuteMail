@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "utils.h"
+#include "quotedprintable.h"
 
 class emlparser : private utils
 {
@@ -34,6 +35,8 @@ private:
     QString getBoundary();
     void splitMultipartMsg();
     QString getHeaderValue(const std::string &field);
+
+
 };
 
 #endif // EMLPARSER_H

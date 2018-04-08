@@ -37,7 +37,6 @@ private slots:
     void on_treeView_clicked(const QModelIndex &index);
     void on_actionDelete_triggered();
     void on_actionRestore_triggered();
-
     void on_actionManage_accounts_triggered();
 
 protected:
@@ -49,6 +48,10 @@ private:
     void populateTreeView();
     void readSettings();
     void writeSettings();
+
+    void showTextMessage(QTableWidgetItem *item);
+    void showFullMessage(QTableWidgetItem *item);
+
     QStringList getCurrentAccount();
 
     Ui::MainWindow *ui;   

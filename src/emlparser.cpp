@@ -50,24 +50,35 @@ void emlparser::splitMultipartMsg()
     QString tmp;
     int idx = 0;
 
+    QString bound = getBoundary();
+
     QFile file(QDir::homePath() + "/.cache/cutemail-tmp.html");
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
+            return;
 
     QTextStream out(&file);
 
-    QString bound = getBoundary();
-
     while (!out.atEnd())
     {
+        if (idx >= 2)
+            break;
+
         QString line = out.readLine();
 
-        if ("--" + bound == line && idx < 2)
+        if ("--" + bound == line || "--" + bound + "--" == line)
+        {
+            idx += 1;
+            continue;
+        }
+
+        tmp += line + "\n";
+
+        /*if ("--" + bound == line && idx < 2)
             idx += 1;
 
         if (idx >= 2)
-            tmp += line;
+            tmp += line;*/
     }
 
     if (file.exists())
@@ -78,10 +89,39 @@ void emlparser::splitMultipartMsg()
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         return;
 
-    int idxOf = tmp.indexOf("<");
-    tmp.remove(0, idxOf);
+    //int idxOf = tmp.indexOf("<");
+    //tmp.remove(0, idxOf);
 
-    out << tmp;
+    if (tmp.contains("base64"))
+    {
+        std::string tmp1 = tmp.toLatin1().toStdString();
+        std::string tmp2 = decodeB64(tmp1);
+        out << QString::fromStdString(tmp2);
+    }
+    else if (tmp.contains("quoted-printable"))
+    {
+        std::string tmp1 = tmp.toLatin1().toStdString();
+        std::string tmp2 = decodeQP(tmp1);
+
+        QString tmp3 = QString::fromStdString(tmp2);
+
+        // this is temporary duck-tape for QP
+        // becouse mimetic's decodeQP is broken
+        // for cyrilic
+        tmp3.replace("==D0", "о");
+        tmp3.replace("==D1", "у");
+        tmp3.replace("==B0", "а");
+        tmp3.replace("==B5", "е");
+        tmp3.replace("==81", "с");
+        tmp3.replace("==8F", "я");
+        tmp3.replace("�", "");
+
+        out << tmp3;
+    }
+    else
+    {
+        out << tmp.toLatin1();
+    }
 
     file.close();
 }
@@ -105,15 +145,14 @@ void emlparser::generateTmpHtml()
         return;
 
     QTextStream out(&file);
-    out.setCodec("UTF-8");
-    out << QString::fromUtf8(me.body().data());
+    out << me.body().data();
 
     file.close();
 
-    if (isMultipart())
-    {
+    //if (isMultipart())
+    //{
         splitMultipartMsg();
-    }
+    //}
 }
 
 QString emlparser::getFrom()

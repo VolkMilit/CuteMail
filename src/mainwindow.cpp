@@ -65,7 +65,7 @@ void MainWindow::populateTreeView()
 // there will be all webview-related settings
 // todo: probably javascript still may be executing, need to off it down
 void MainWindow::setupWebView()
-{
+{    
     ui->webView->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
     ui->webView->settings()->setAttribute(QWebSettings::JavaEnabled, false);
     ui->webView->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
@@ -75,6 +75,8 @@ void MainWindow::setupWebView()
     ui->webView->settings()->setObjectCacheCapacities(0, 0, 0);
     ui->webView->settings()->setOfflineWebApplicationCacheQuota(0);
     ui->webView->settings()->setDefaultTextEncoding("utf-8");
+
+    ui->webView->hide();
 }
 
 void MainWindow::readSettings()
@@ -147,18 +149,33 @@ void MainWindow::refresh()
     populateTable();
 }
 
-void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
+void MainWindow::showTextMessage(QTableWidgetItem *item)
 {
     emlparser eml(this->tmp.at(item->row()));
     eml.generateTmpHtml();
 
-    // temporary solution for a couple of version,
-    // in in the next version it will be replaced by
-    // someting else, but no browser
+    QFile ff(QDir::homePath() + "/.cache/cutemail-tmp.html");
+    ff.open(QFile::ReadOnly | QFile::Text);
+    QTextStream readFile(&ff);
+
+    ui->textBrowser->clear();
+    ui->textBrowser->append(readFile.readAll());
+}
+
+void MainWindow::showFullMessage(QTableWidgetItem *item)
+{
+    emlparser eml(this->tmp.at(item->row()));
+    eml.generateTmpHtml();
+
     ui->webView->setUrl(QUrl("file://" + QDir::homePath() + "/.cache/cutemail-tmp.html"));
 
     ui->actionDelete->setEnabled(true);
     ui->actionRestore->setEnabled(true);
+}
+
+void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
+{
+    showTextMessage(item);
 }
 
 void MainWindow::on_actionFetch_mail_triggered()
