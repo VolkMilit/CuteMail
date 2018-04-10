@@ -154,6 +154,9 @@ void MainWindow::showTextMessage(QTableWidgetItem *item)
     emlparser eml(this->tmp.at(item->row()));
     eml.generateTmpHtml();
 
+    if (eml.isNoncompliantMail())
+        ui->fr_warning->show();
+
     QFile ff(QDir::homePath() + "/.cache/cutemail-tmp.html");
     ff.open(QFile::ReadOnly | QFile::Text);
     QTextStream readFile(&ff);
@@ -164,6 +167,8 @@ void MainWindow::showTextMessage(QTableWidgetItem *item)
 
 void MainWindow::showFullMessage(QTableWidgetItem *item)
 {
+    ui->fr_warning->hide();
+
     emlparser eml(this->tmp.at(item->row()));
     eml.generateTmpHtml();
 
@@ -175,21 +180,18 @@ void MainWindow::showFullMessage(QTableWidgetItem *item)
 
 void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
 {
+    ui->fr_warning->hide();
+    ui->webView->hide();
+    ui->textBrowser->show();
     showTextMessage(item);
+
+    QTextCursor cursor = ui->textBrowser->textCursor();
+    cursor.setPosition(0);
+    ui->textBrowser->setTextCursor(cursor);
 }
 
 void MainWindow::on_actionFetch_mail_triggered()
 {
-    /*QString account = getCurrentAccount().at(0);
-
-    if (account == nullptr)
-        return;
-
-    QStringList account_parse = account.split("@");
-    connect(fetch_proc, SIGNAL(finished(int)), this, SLOT(refresh())); // doesn't work? wtf?!
-    askForPassword(account_parse.at(1), "imap", account_parse.at(0));
-    fetch_proc->startDetached(setting->getSettingsPath() + "start.sh");*/
-
     QString account = getCurrentAccount().at(0);
     QStringList account_parse = account.split("@");
 
@@ -255,4 +257,28 @@ void MainWindow::on_actionRestore_triggered()
 void MainWindow::on_actionManage_accounts_triggered()
 {
     accountswindow->show();
+}
+
+void MainWindow::on_bt_chngview_clicked()
+{
+    QTableWidgetItem *item = ui->tb_mails->currentItem();
+
+    if (fullshowing == false)
+    {
+        ui->bt_chngview->setText("Hide full");
+        fullshowing = true;
+
+        ui->textBrowser->hide();
+        ui->webView->show();
+        showFullMessage(item);
+    }
+    else
+    {
+        ui->bt_chngview->setText("Show full");
+        fullshowing = false;
+
+        ui->webView->hide();
+        ui->textBrowser->show();
+        showTextMessage(item);
+    }
 }

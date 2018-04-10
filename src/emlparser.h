@@ -14,7 +14,6 @@
 #include <vector>
 
 #include "utils.h"
-#include "quotedprintable.h"
 
 class emlparser : private utils
 {
@@ -27,16 +26,18 @@ public:
     QString getDate();
     QString getSubject();
     void generateTmpHtml();
+    bool isNoncompliantMail();
 
 private:
-    QString msg;
+    QString msgfile;
+    QString enconding;
+    bool isnoncompliant;
 
     bool isMultipart();
     QString getBoundary();
-    void splitMultipartMsg();
+    QString findBody();
+    void decode();
     QString getHeaderValue(const std::string &field);
-
-
 };
 
 #endif // EMLPARSER_H

@@ -82,6 +82,50 @@
          </property>
         </column>
        </widget>
+       <widget class="QFrame" name="fr_warning">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>60</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>60</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="lb_warning">
+           <property name="text">
+            <string>CuteMail detected this message can display
+incorrectly. Click this button to show full
+(using webview).</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="bt_chngview">
+           <property name="text">
+            <string>Show full</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
        <widget class="QWebView" name="webView">
         <property name="url">
          <url>

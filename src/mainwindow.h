@@ -39,6 +39,8 @@ private slots:
     void on_actionRestore_triggered();
     void on_actionManage_accounts_triggered();
 
+    void on_bt_chngview_clicked();
+
 protected:
     void closeEvent(QCloseEvent *event);
 
@@ -62,6 +64,8 @@ private:
     QTreeViewHelper *qtreeviewhelper;
 
     QVector<QString> tmp;
+
+    bool fullshowing = false;
 };
 
 #endif // MAINWINDOW_H
