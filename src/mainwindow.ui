@@ -23,7 +23,7 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QTreeView" name="treeView">
+      <widget class="QTreeWidget" name="treeWidget">
        <property name="minimumSize">
         <size>
          <width>60</width>
@@ -33,6 +33,11 @@
        <property name="headerHidden">
         <bool>true</bool>
        </property>
+       <column>
+        <property name="text">
+         <string notr="true">1</string>
+        </property>
+       </column>
       </widget>
       <widget class="QSplitter" name="splitter">
        <property name="orientation">

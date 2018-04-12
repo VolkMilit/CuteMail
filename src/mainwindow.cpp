@@ -26,14 +26,13 @@ MainWindow::MainWindow(QWidget *parent) :
     gen(new cmgenerate()),
     setting(new settings()),
     maild(new mailDir()),
-    accountswindow(new accountsWindow(parent)),
-    qtreeviewhelper(new QTreeViewHelper())
+    accountswindow(new accountsWindow(parent))
 {
     ui->setupUi(this);
 
     ui->fr_warning->hide();
 
-    populateTreeView();
+    populateTreeWidget();
     setupWebView();
     readSettings();
     populateTable();
@@ -51,7 +50,7 @@ MainWindow::~MainWindow()
 
 QStringList MainWindow::getCurrentAccount()
 {
-    const QModelIndex index = ui->treeView->currentIndex();
+    const QModelIndex index = ui->treeWidget->currentIndex();
     QStringList list;
 
     if (index.parent().row() > 0) // we're on child item
@@ -67,19 +66,26 @@ QStringList MainWindow::getCurrentAccount()
     }
 }
 
-// this will populate tree view with model
-void MainWindow::populateTreeView()
+void MainWindow::populateTreeWidget()
 {
-    QFileSystemModel *model = new QFileSystemModel;
-    model->setRootPath(gen->getMailFolderPath());
-    model->setFilter(QDir::NoDotAndDotDot | QDir::Dirs);
+    QDir dirs(gen->getMailFolderPath());
+    QStringList acclist = dirs.entryList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot);
 
-    ui->treeView->setModel(model);
-    ui->treeView->setRootIndex(model->index(gen->getMailFolderPath()));
+    for (auto acc : acclist)
+    {
+        QDir subdir(dirs.path() + "/" + acc);
+        QStringList sublist = subdir.entryList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot);
 
-    // hide unnecessary column
-    for (int i = 1; i < 4; i++)
-        ui->treeView->setColumnHidden(i, true);
+        QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
+        item->setText(0, acc);
+
+        for (auto accdirs : sublist)
+        {
+            QTreeWidgetItem *subitem = new QTreeWidgetItem;
+            subitem->setText(0, accdirs);
+            item->addChild(subitem);
+        }
+    }
 }
 
 // there will be all webview-related settings
@@ -111,6 +117,7 @@ void MainWindow::readSettings()
     const QString max = setting->getWindowFullscreen();
     const QString column = setting->getTableHeadersWight();
     const QStringList column_list = column.split(",");
+    const QString last_acc = setting->getLastAccount();
 
     this->resize(dem.split("x")[0].toInt(), dem.split("x")[1].toInt());
     if (max.toInt() == 1) this->showMaximized();
@@ -118,8 +125,17 @@ void MainWindow::readSettings()
     for (int i = 0; i < column_list.length(); i++)
         ui->tb_mails->setColumnWidth(i, column_list.at(i).toInt());
 
-    QModelIndex idx = 0;
-    ui->treeView->setCurrentIndex(idx);
+    for (auto acc = 0; acc < ui->treeWidget->topLevelItemCount(); acc++)
+    {
+        QTreeWidgetItem *item = ui->treeWidget->topLevelItem(acc);
+        if (item->text(0) == last_acc)
+        {
+            ui->treeWidget->topLevelItem(acc)->setSelected(true);
+            ui->treeWidget->topLevelItem(acc)->setExpanded(true);
+            ui->treeWidget->setCurrentItem(item);
+            break;
+        }
+    }
 }
 
 void MainWindow::writeSettings()
@@ -167,11 +183,6 @@ void MainWindow::populateTable()
     }
 }
 
-void MainWindow::refresh()
-{
-    populateTable();
-}
-
 void MainWindow::showTextMessage(QTableWidgetItem *item)
 {
     emlparser eml(this->tmp.at(item->row()));
@@ -186,6 +197,10 @@ void MainWindow::showTextMessage(QTableWidgetItem *item)
 
     ui->textBrowser->clear();
     ui->textBrowser->append(readFile.readAll());
+
+    QTextCursor cursor = ui->textBrowser->textCursor();
+    cursor.setPosition(0);
+    ui->textBrowser->setTextCursor(cursor);
 }
 
 void MainWindow::showFullMessage(QTableWidgetItem *item)
@@ -207,10 +222,6 @@ void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
     ui->webView->hide();
     ui->textBrowser->show();
     showTextMessage(item);
-
-    QTextCursor cursor = ui->textBrowser->textCursor();
-    cursor.setPosition(0);
-    ui->textBrowser->setTextCursor(cursor);
 }
 
 void MainWindow::on_actionFetch_mail_triggered()
@@ -237,22 +248,6 @@ void MainWindow::askForPassword(QString server, QString protocol, QString userna
     {
         QMessageBox::critical(this, "CuteMail", tr("Couldn't connect to ") + getCurrentAccount().at(0), QMessageBox::Ok);
     }
-}
-
-void MainWindow::on_treeView_clicked(const QModelIndex &index)
-{
-    if (getCurrentAccount().size() > 1)
-    {
-        if (getCurrentAccount().at(1) == "trash")
-            ui->actionRestore->setVisible(true);
-        else
-            ui->actionRestore->setVisible(false);
-    }
-
-    populateTable();
-    setWindowTitle(getCurrentAccount().at(0) + " - CuteMail");
-    ui->actionDelete->setEnabled(false);
-    ui->actionRestore->setEnabled(false);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -286,22 +281,26 @@ void MainWindow::on_bt_chngview_clicked()
 {
     QTableWidgetItem *item = ui->tb_mails->currentItem();
 
-    if (fullshowing == false)
-    {
-        ui->bt_chngview->setText("Hide full");
-        fullshowing = true;
+    ui->webView->show();
+    ui->textBrowser->hide();
+    showFullMessage(item);
+}
 
-        ui->textBrowser->hide();
-        ui->webView->show();
-        showFullMessage(item);
-    }
-    else
-    {
-        ui->bt_chngview->setText("Show full");
-        fullshowing = false;
+void MainWindow::on_treeWidget_itemSelectionChanged()
+{
+    QTreeWidgetItem *item = ui->treeWidget->currentItem();
+    ui->treeWidget->setItemExpanded(item, true);
 
-        ui->webView->hide();
-        ui->textBrowser->show();
-        showTextMessage(item);
+    if (getCurrentAccount().size() > 1)
+    {
+        if (getCurrentAccount().at(1) == "trash")
+            ui->actionRestore->setVisible(true);
+        else
+            ui->actionRestore->setVisible(false);
     }
+
+    populateTable();
+    setWindowTitle(getCurrentAccount().at(0) + " - CuteMail");
+    ui->actionDelete->setEnabled(false);
+    ui->actionRestore->setEnabled(false);
 }

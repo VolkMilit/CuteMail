@@ -29,11 +29,11 @@
 #include <QMessageBox>
 #include <QFileSystemModel>
 #include <QItemSelection>
+#include <QStandardItemModel>
 
 #include "generate.h"
 #include "maildir.h"
 #include "accountswindow.h"
-#include "qtreeviewhelper.h"
 #include "emlparser.h"
 #include "mailfetch.h"
 
@@ -51,13 +51,11 @@ private slots:
     void on_tb_mails_itemClicked(QTableWidgetItem *item);
     void on_actionFetch_mail_triggered();
     void populateTable();
-    void refresh();
-    void on_treeView_clicked(const QModelIndex &index);
     void on_actionDelete_triggered();
     void on_actionRestore_triggered();
     void on_actionManage_accounts_triggered();
-
     void on_bt_chngview_clicked();
+    void on_treeWidget_itemSelectionChanged();
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -65,7 +63,7 @@ protected:
 private:
     void askForPassword(QString server, QString protocol, QString username);
     void setupWebView();
-    void populateTreeView();
+    void populateTreeWidget();
     void readSettings();
     void writeSettings();
 
@@ -79,11 +77,8 @@ private:
     settings *setting;
     mailDir *maild;
     accountsWindow *accountswindow;
-    QTreeViewHelper *qtreeviewhelper;
 
     QVector<QString> tmp;
-
-    bool fullshowing = false;
 };
 
 #endif // MAINWINDOW_H
