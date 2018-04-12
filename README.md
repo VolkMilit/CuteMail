@@ -26,5 +26,13 @@ Creating:
 - libetpan
 - libmimetic
 
+### Screenshots
+
+<p align="center">
+  <img src="screenshots/cutemail-main.png?raw=true" alt="Main screenshot"/>
+  <img src="screenshots/cutemail-textmail.png?raw=true" width="250px" height="140px" alt="Main window with text"/>
+  <img src="screenshots/cutemail-htmlmail.png?raw=true" width="250px" height="140px" alt="Main window with html"/>
+</p>
+
 ### LICENSE
 See LICENSE in root repository.
