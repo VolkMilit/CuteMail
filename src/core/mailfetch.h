@@ -36,8 +36,8 @@ extern "C" {
 }
 #endif
 
-#include "generate.h"
-#include "utils.h"
+#include "core/generate.h"
+#include "utils/utils.h"
 
 class mailfetch : private utils
 {

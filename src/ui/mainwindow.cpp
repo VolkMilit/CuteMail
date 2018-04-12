@@ -88,69 +88,6 @@ void MainWindow::populateTreeWidget()
     }
 }
 
-// there will be all webview-related settings
-// todo: probably javascript still may be executing, need to off it down
-void MainWindow::setupWebView()
-{    
-    ui->webView->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
-    ui->webView->settings()->setAttribute(QWebSettings::JavaEnabled, false);
-    ui->webView->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
-    ui->webView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, false);
-    ui->webView->settings()->setMaximumPagesInCache(0);
-    ui->webView->settings()->setOfflineStorageDefaultQuota(0);
-    ui->webView->settings()->setObjectCacheCapacities(0, 0, 0);
-    ui->webView->settings()->setOfflineWebApplicationCacheQuota(0);
-    ui->webView->settings()->setDefaultTextEncoding("utf-8");
-
-    ui->webView->hide();
-}
-
-void MainWindow::readSettings()
-{
-    if (!setting->settingsFile())
-    {
-        qDebug() << "Cannot read settings, create new one.";
-        writeSettings();
-    }
-
-    const QString dem = setting->getWindowDemention();
-    const QString max = setting->getWindowFullscreen();
-    const QString column = setting->getTableHeadersWight();
-    const QStringList column_list = column.split(",");
-    const QString last_acc = setting->getLastAccount();
-
-    this->resize(dem.split("x")[0].toInt(), dem.split("x")[1].toInt());
-    if (max.toInt() == 1) this->showMaximized();
-
-    for (int i = 0; i < column_list.length(); i++)
-        ui->tb_mails->setColumnWidth(i, column_list.at(i).toInt());
-
-    for (auto acc = 0; acc < ui->treeWidget->topLevelItemCount(); acc++)
-    {
-        QTreeWidgetItem *item = ui->treeWidget->topLevelItem(acc);
-        if (item->text(0) == last_acc)
-        {
-            ui->treeWidget->topLevelItem(acc)->setSelected(true);
-            ui->treeWidget->topLevelItem(acc)->setExpanded(true);
-            ui->treeWidget->setCurrentItem(item);
-            break;
-        }
-    }
-}
-
-void MainWindow::writeSettings()
-{
-    QString column_str;
-
-    for (int i = 0; i < ui->tb_mails->columnCount(); i++)
-        column_str += QString::number(ui->tb_mails->columnWidth(i)) + ",";
-
-    setting->setTableHeadersWight(column_str);
-    setting->setWindowDemention(QString::number(MainWindow::width()) + "x" + QString::number(MainWindow::height()));
-    setting->setWindowFullscreen(QString::number(this->isMaximized()));
-    setting->setLastAccount(getCurrentAccount().at(0));
-}
-
 void MainWindow::populateTable()
 {
     ui->tb_mails->setRowCount(0); // clear table
@@ -303,4 +240,67 @@ void MainWindow::on_treeWidget_itemSelectionChanged()
     setWindowTitle(getCurrentAccount().at(0) + " - CuteMail");
     ui->actionDelete->setEnabled(false);
     ui->actionRestore->setEnabled(false);
+}
+
+// there will be all webview-related settings
+// todo: probably javascript still may be executing, need to off it down
+void MainWindow::setupWebView()
+{
+    ui->webView->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
+    ui->webView->settings()->setAttribute(QWebSettings::JavaEnabled, false);
+    ui->webView->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
+    ui->webView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, false);
+    ui->webView->settings()->setMaximumPagesInCache(0);
+    ui->webView->settings()->setOfflineStorageDefaultQuota(0);
+    ui->webView->settings()->setObjectCacheCapacities(0, 0, 0);
+    ui->webView->settings()->setOfflineWebApplicationCacheQuota(0);
+    ui->webView->settings()->setDefaultTextEncoding("utf-8");
+
+    ui->webView->hide();
+}
+
+void MainWindow::readSettings()
+{
+    if (!setting->settingsFile())
+    {
+        qDebug() << "Cannot read settings, create new one.";
+        writeSettings();
+    }
+
+    const QString dem = setting->getWindowDemention();
+    const QString max = setting->getWindowFullscreen();
+    const QString column = setting->getTableHeadersWight();
+    const QStringList column_list = column.split(",");
+    const QString last_acc = setting->getLastAccount();
+
+    this->resize(dem.split("x")[0].toInt(), dem.split("x")[1].toInt());
+    if (max.toInt() == 1) this->showMaximized();
+
+    for (int i = 0; i < column_list.length(); i++)
+        ui->tb_mails->setColumnWidth(i, column_list.at(i).toInt());
+
+    for (auto acc = 0; acc < ui->treeWidget->topLevelItemCount(); acc++)
+    {
+        QTreeWidgetItem *item = ui->treeWidget->topLevelItem(acc);
+        if (item->text(0) == last_acc)
+        {
+            ui->treeWidget->topLevelItem(acc)->setSelected(true);
+            ui->treeWidget->topLevelItem(acc)->setExpanded(true);
+            ui->treeWidget->setCurrentItem(item);
+            break;
+        }
+    }
+}
+
+void MainWindow::writeSettings()
+{
+    QString column_str;
+
+    for (int i = 0; i < ui->tb_mails->columnCount(); i++)
+        column_str += QString::number(ui->tb_mails->columnWidth(i)) + ",";
+
+    setting->setTableHeadersWight(column_str);
+    setting->setWindowDemention(QString::number(MainWindow::width()) + "x" + QString::number(MainWindow::height()));
+    setting->setWindowFullscreen(QString::number(this->isMaximized()));
+    setting->setLastAccount(getCurrentAccount().at(0));
 }

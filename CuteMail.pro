@@ -1,50 +1,12 @@
-#-------------------------------------------------
+# Toplevel qmake .pro file. Create a Makefile from this with
 #
-# Project created by QtCreator 2017-10-22T11:09:45
+#     qmake
 #
-#-------------------------------------------------
+# Then build the program with
+#
+#     make
 
-QT       += core gui
+TEMPLATE = subdirs
+CONFIG  += ordered
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets webkit webkitwidgets
-
-TARGET = CuteMail
-TEMPLATE = app
-CONFIG += c++11
-LIBS += -lmimetic
-LIBS += -letpan
-
-# The following define makes your compiler emit warnings if you use
-# any feature of Qt which as been marked as deprecated (the exact warnings
-# depend on your compiler). Please consult the documentation of the
-# deprecated API in order to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
-
-# You can also make your code fail to compile if you use deprecated APIs.
-# In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-
-SOURCES += src/main.cpp\
-        src/mainwindow.cpp \
-    src/generate.cpp \
-    src/settings.cpp \
-    src/maildir.cpp \
-    src/accountswindow.cpp \
-    src/qtreeviewhelper.cpp \
-    src/emlparser.cpp \
-    src/mailfetch.cpp \
-    src/utils.cpp
-
-HEADERS  += src/mainwindow.h \
-    src/generate.h \
-    src/settings.h \
-    src/maildir.h \
-    src/accountswindow.h \
-    src/qtreeviewhelper.h \
-    src/emlparser.h \
-    src/mailfetch.h \
-    src/utils.h
-
-FORMS    += src/mainwindow.ui \
-    src/accountswindow.ui
+SUBDIRS  = src

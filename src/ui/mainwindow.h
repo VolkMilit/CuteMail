@@ -31,11 +31,11 @@
 #include <QItemSelection>
 #include <QStandardItemModel>
 
-#include "generate.h"
-#include "maildir.h"
-#include "accountswindow.h"
-#include "emlparser.h"
-#include "mailfetch.h"
+#include "core/generate.h"
+#include "core/maildir.h"
+#include "core/emlparser.h"
+#include "core/mailfetch.h"
+#include "ui/accountswindow.h"
 
 namespace Ui {class MainWindow;}
 
@@ -72,7 +72,7 @@ private:
 
     QStringList getCurrentAccount();
 
-    Ui::MainWindow *ui;   
+    Ui::MainWindow *ui;
     cmgenerate *gen;
     settings *setting;
     mailDir *maild;

@@ -16,27 +16,31 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef GENERATE_H
-#define GENERATE_H
+#ifndef MAILDIR_H
+#define MAILDIR_H
 
 #include <QString>
-#include <QFile>
 #include <QDir>
+#include <QFileInfo>
+#include <QVector>
+#include <QDirIterator>
 
-#include "settings.h"
+//std headers
+#include <algorithm>
 
-class cmgenerate
+#include "core/generate.h"
+
+class mailDir
 {
 public:
-    cmgenerate();
-    ~cmgenerate();
-    void accauntsFolders(QString account_name);
-    QString getMailFolderPath();
+    mailDir();
+    ~mailDir();
+
+    QVector<QString> scanDir(QString dir);
+    void move(QString file_name, QString account_name, QString destenation_folder);
 
 private:
-    QString mailFolderPath;
-
-    settings *setting;
+    cmgenerate *gen;
 };
 
-#endif // GENERATE_H
+#endif // MAILDIR_H

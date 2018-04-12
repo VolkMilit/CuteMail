@@ -21,8 +21,8 @@
 
 #include <QDialog>
 
-#include "settings.h"
-#include "generate.h"
+#include "utils/settings.h"
+#include "core/generate.h"
 
 namespace Ui {
 class accountsWindow;
