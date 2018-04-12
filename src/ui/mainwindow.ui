@@ -157,6 +157,7 @@ incorrectly. Click this button to show full
     <property name="title">
      <string>FIle</string>
     </property>
+    <addaction name="actionSettings"/>
     <addaction name="actionExit_Ctrl_Q"/>
    </widget>
    <widget class="QMenu" name="menuAccounts">
@@ -215,6 +216,11 @@ incorrectly. Click this button to show full
   <action name="actionManage_accounts">
    <property name="text">
     <string>Manage accounts</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
    </property>
   </action>
  </widget>

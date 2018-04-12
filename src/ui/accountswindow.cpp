@@ -98,5 +98,5 @@ void accountsWindow::on_lw_accounts_clicked(const QModelIndex &index)
 void accountsWindow::on_buttonBox_rejected()
 {
     writeAccount();
-    this->hide();
+    this->close();
 }

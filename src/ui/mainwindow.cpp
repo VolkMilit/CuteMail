@@ -26,7 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
     gen(new cmgenerate()),
     setting(new settings()),
     maild(new mailDir()),
-    accountswindow(new accountsWindow(parent))
+    accountswindow(new accountsWindow(parent)),
+    settingsdialog(new settingsDialog(parent))
 {
     ui->setupUi(this);
 
@@ -211,7 +212,8 @@ void MainWindow::on_actionRestore_triggered()
 
 void MainWindow::on_actionManage_accounts_triggered()
 {
-    accountswindow->show();
+    accountswindow->exec();
+    accountswindow->done(0);
 }
 
 void MainWindow::on_bt_chngview_clicked()
@@ -303,4 +305,10 @@ void MainWindow::writeSettings()
     setting->setWindowDemention(QString::number(MainWindow::width()) + "x" + QString::number(MainWindow::height()));
     setting->setWindowFullscreen(QString::number(this->isMaximized()));
     setting->setLastAccount(getCurrentAccount().at(0));
+}
+
+void MainWindow::on_actionSettings_triggered()
+{
+    settingsdialog->exec();
+    settingsdialog->done(0);
 }

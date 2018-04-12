@@ -74,51 +74,7 @@ QString settings::getUseSSL(QString account)
 }
 
 /*settings.ini*/
-// [general]
-// TableHeadersWight
-void settings::setTableHeadersWight(QString value)
-{
-    write(settingsBase, "General", "TableHeadersWight", value);
-}
-
-QString settings::getTableHeadersWight()
-{
-    return read(settingsBase, "General", "TableHeadersWight");
-}
-
-// SplitterSizes
-void settings::setSplitterSizes(QByteArray value)
-{
-    write(settingsBase, "General", "SplitterSizes", value);
-}
-
-QString settings::getSplitterSizes()
-{
-    return read(settingsBase, "General", "SplitterSizes");
-}
-
-// WindowDemention
-void settings::setWindowDemention(QString value)
-{
-    write(settingsBase, "General", "WindowDemention", value);
-}
-
-QString settings::getWindowDemention()
-{
-    return read(settingsBase, "General", "WindowDemention");
-}
-
-// WindowFullscreen
-void settings::setWindowFullscreen(QString value)
-{
-    write(settingsBase, "General", "WindowFullscreen", value);
-}
-
-QString settings::getWindowFullscreen()
-{
-    return read(settingsBase, "General", "WindowFullscreen");
-}
-
+// [general] for user related settings
 // LastAccount
 void settings::setLastAccount(QString value)
 {
@@ -128,6 +84,139 @@ void settings::setLastAccount(QString value)
 QString settings::getLastAccount()
 {
     return read(settingsBase, "General", "LastAccount");
+}
+
+// MailDir
+void settings::setMailDir(QString value)
+{
+    write(settingsBase, "General", "MailDir", value);
+}
+
+QString settings::getMailDir()
+{
+    return read(settingsBase, "General", "MailDir");
+}
+
+// AlwaysUseWebview
+void settings::setAlwaysUseWebview(int value)
+{
+    write(settingsBase, "General", "AlwaysUseWebview", value);
+}
+
+int settings::getAlwaysUseWebview()
+{
+    return readInt(settingsBase, "General", "AlwaysUseWebview");
+}
+
+// UseWebviewAutomatically
+void settings::setUseWebviewAutomatically(int value)
+{
+    write(settingsBase, "General", "UseWebviewAutomatically", value);
+}
+
+int settings::getUseWebviewAutomatically()
+{
+    return readInt(settingsBase, "General", "UseWebviewAutomatically");
+}
+
+// CheckForNewMail
+void settings::setCheckForNewMail(int value)
+{
+    write(settingsBase, "General", "CheckForNewMail", value);
+}
+
+int settings::getCheckForNewMail()
+{
+    return readInt(settingsBase, "General", "CheckForNewMail");
+}
+
+// CheckAfter
+void settings::setCheckAfter(int value)
+{
+    write(settingsBase, "General", "CheckAfter", value);
+}
+
+int settings::getCheckAfter()
+{
+    return readInt(settingsBase, "General", "CheckAfter");
+}
+
+// DisplayTray
+void settings::setDisplayTray(int value)
+{
+    write(settingsBase, "General", "DisplayTray", value);
+}
+
+int settings::getDisplayTray()
+{
+    return readInt(settingsBase, "General", "DisplayTray");
+}
+
+// DisplayNotify
+void settings::setDisplayNotify(int value)
+{
+    write(settingsBase, "General", "DisplayNotify", value);
+}
+
+int settings::getDisplayNotify()
+{
+    return readInt(settingsBase, "General", "DisplayNotify");
+}
+
+// [readonly] for program-generated values
+// DisplayMessageOnce
+void settings::setDisplayMessageOnce(int value)
+{
+    write(settingsBase, "readonly", "DisplayMessageOnce", value);
+}
+
+int settings::getDisplayMessageOnce()
+{
+    readInt(settingsBase, "readonly", "DisplayMessageOnce");
+}
+
+// TableHeadersWight
+void settings::setTableHeadersWight(QString value)
+{
+    write(settingsBase, "readonly", "TableHeadersWight", value);
+}
+
+QString settings::getTableHeadersWight()
+{
+    return read(settingsBase, "readonly", "TableHeadersWight");
+}
+
+// SplitterSizes
+void settings::setSplitterSizes(QByteArray value)
+{
+    write(settingsBase, "readonly", "SplitterSizes", value);
+}
+
+QString settings::getSplitterSizes()
+{
+    return read(settingsBase, "readonly", "SplitterSizes");
+}
+
+// WindowDemention
+void settings::setWindowDemention(QString value)
+{
+    write(settingsBase, "readonly", "WindowDemention", value);
+}
+
+QString settings::getWindowDemention()
+{
+    return read(settingsBase, "readonly", "WindowDemention");
+}
+
+// WindowFullscreen
+void settings::setWindowFullscreen(QString value)
+{
+    write(settingsBase, "readonly", "WindowFullscreen", value);
+}
+
+QString settings::getWindowFullscreen()
+{
+    return read(settingsBase, "readonly", "WindowFullscreen");
 }
 
 QString settings::getSettingsPath()
@@ -150,6 +239,18 @@ QString settings::read(QString file, QString group, QString value)
     QSettings settings(file, QSettings::IniFormat);
     settings.beginGroup(group);
     rv = settings.value(value).toString();
+    settings.endGroup();
+
+    return rv;
+}
+
+int settings::readInt(QString file, QString group, QString value)
+{
+    int rv;
+
+    QSettings settings(file, QSettings::IniFormat);
+    settings.beginGroup(group);
+    rv = settings.value(value).toInt();
     settings.endGroup();
 
     return rv;

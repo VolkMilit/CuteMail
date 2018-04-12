@@ -36,6 +36,7 @@
 #include "core/emlparser.h"
 #include "core/mailfetch.h"
 #include "ui/accountswindow.h"
+#include "ui/settingsdialog.h"
 
 namespace Ui {class MainWindow;}
 
@@ -56,6 +57,7 @@ private slots:
     void on_actionManage_accounts_triggered();
     void on_bt_chngview_clicked();
     void on_treeWidget_itemSelectionChanged();
+    void on_actionSettings_triggered();
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -77,6 +79,7 @@ private:
     settings *setting;
     mailDir *maild;
     accountsWindow *accountswindow;
+    settingsDialog *settingsdialog;
 
     QVector<QString> tmp;
 };

@@ -34,6 +34,7 @@ SOURCES += main.cpp\
     core/mailfetch.cpp \
     utils/settings.cpp \
     utils/utils.cpp \
+    ui/settingsdialog.cpp
 
 HEADERS  += ui/mainwindow.h \
     ui/accountswindow.h \
@@ -42,7 +43,9 @@ HEADERS  += ui/mainwindow.h \
     utils/utils.h \
     core/maildir.h \
     core/emlparser.h \
-    core/mailfetch.h
+    core/mailfetch.h \
+    ui/settingsdialog.h
     
 FORMS    += ui/mainwindow.ui \
-    ui/accountswindow.ui
+    ui/accountswindow.ui \
+    ui/settingsdialog.ui

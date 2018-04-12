@@ -21,7 +21,7 @@
 cmgenerate::cmgenerate() :
     setting(new settings())
 {
-    mailFolderPath = QDir::homePath() + "/mail/"; // will be configurable
+    mailFolderPath = setting->getMailDir() + "/";
 }
 
 cmgenerate::~cmgenerate()

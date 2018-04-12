@@ -31,6 +31,7 @@ public:
 
     void write(QString file, QString group, QString value, QVariant var);
     QString read(QString file, QString group, QString value);
+    int readInt(QString file, QString group, QString value);
     QString getSettingsPath();
 
     /*accounts.ini*/
@@ -67,6 +68,38 @@ public:
     // LastAccount
     void setLastAccount(QString value);
     QString getLastAccount();
+
+    // MailDir
+    void setMailDir(QString value);
+    QString getMailDir();
+
+    // AlwaysUseWebview
+    void setAlwaysUseWebview(int value);
+    int getAlwaysUseWebview();
+
+    // UseWebviewAutomatically
+    void setUseWebviewAutomatically(int value);
+    int getUseWebviewAutomatically();
+
+    // CheckForNewMail
+    void setCheckForNewMail(int value);
+    int getCheckForNewMail();
+
+    // CheckAfter
+    void setCheckAfter(int value);
+    int getCheckAfter();
+
+    // DisplayTray
+    void setDisplayTray(int value);
+    int getDisplayTray();
+
+    // DisplayNotify
+    void setDisplayNotify(int value);
+    int getDisplayNotify();
+
+    // DisplayMessageOnce
+    void setDisplayMessageOnce(int value);
+    int getDisplayMessageOnce();
 
     bool settingsFile();
 
