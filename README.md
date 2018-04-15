@@ -6,7 +6,7 @@ Yet another GUI email client that sucks less.
 ## Contents
 
 * [Screenshots](#screenshots)
-* [Why not using the web?](#why not using the web?)
+* [Why not using the web?](#why-not-using-the-web)
 * [Goal](#goal)
 * [Dependencies](#dependencies)
 * [License](#license)
