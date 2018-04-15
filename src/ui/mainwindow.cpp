@@ -129,7 +129,7 @@ void MainWindow::showTextMessage(QTableWidgetItem *item)
 {
     emlparser eml(this->tmp.at(item->row()));
 
-    if (eml.getContentType() == "text/html")
+    if (eml.isNoncompliantMail())
         ui->fr_warning->show();
 
     ui->textBrowser->clear();
@@ -145,7 +145,11 @@ void MainWindow::showFullMessage(QTableWidgetItem *item)
     ui->fr_warning->hide();
 
     emlparser eml(this->tmp.at(item->row()));
-    ui->webView->setHtml(eml.getBody().first);
+
+    if (!eml.getBody().second.isEmpty())
+        ui->webView->setHtml(eml.getBody().second);
+    else
+        ui->webView->setHtml(eml.getBody().first);
 }
 
 void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)

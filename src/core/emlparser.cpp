@@ -85,7 +85,7 @@ void emlparser::parseHeader()
 {
     QFile file(this->msgfile);
 
-    if (!file.open(QFile::ReadOnly | QFile::Text))
+    if (!file.open(QFile::ReadOnly | QFile::Text) || !file.exists())
         return;
 
     QTextStream in(&file);
@@ -93,17 +93,17 @@ void emlparser::parseHeader()
     while(!in.atEnd())
     {
         QString line = in.readLine();
-        QString tmp = line.split(":").at(0);
+        QStringList field = line.split(": ");
 
-        if (tmp == "Date")
-            this->header.date = line.split(": ").at(1);
+        if (field.at(0) == "Date")
+            this->header.date = field.at(1);
 
-        if (tmp == "Delivered-To")
-            this->header.to = decodeall(line.split(": ").at(1));
+        if (field.at(0) == "Delivered-To")
+            this->header.to = decodeall(field.at(1));
 
-        if (tmp == "Subject")
+        if (field.at(0) == "Subject")
         {
-            this->header.subject = decodeall(line.split(": ").at(1));
+            this->header.subject = decodeall(field.at(1));
 
             in.seek(in.pos());
             while (!in.atEnd())
@@ -117,9 +117,9 @@ void emlparser::parseHeader()
             }
         }
 
-        if (tmp == "From")
+        if (field.at(0) == "From")
         {
-            this->header.from = decodeall(line.split(": ").at(1));
+            this->header.from = decodeall(field.at(1));
 
             in.seek(in.pos());
             while (!in.atEnd())
@@ -133,12 +133,12 @@ void emlparser::parseHeader()
             }
         }
 
-        if (tmp == "Content-Transfer-Encoding")
-            this->header.cte = line.split(": ").at(1);
+        if (field.at(0) == "Content-Transfer-Encoding")
+            this->header.cte = field.at(1);
 
-        if (tmp == "Content-Type")
+        if (field.at(0) == "Content-Type")
         {
-            QString ct = line.split(": ").at(1);
+            QString ct = field.at(1);
             this->header.ct = ct.split(";").at(0);
         }
 
@@ -159,7 +159,7 @@ void emlparser::parseBody()
 
     QFile file(this->msgfile);
 
-    if (!file.open(QFile::ReadOnly | QFile::Text))
+    if (!file.open(QFile::ReadOnly | QFile::Text) || !file.exists())
         return;
 
     QTextStream in(&file);
@@ -376,7 +376,10 @@ void emlparser::generateTmpHtml()
 */
 bool emlparser::isNoncompliantMail()
 {
-    return isnoncompliant;
+    if (this->header.ct == "text/html" || this->header.cte.isEmpty())
+        return true;
+
+    return false;
 }
 
 QString emlparser::getFrom()
