@@ -37,6 +37,10 @@ MainWindow::MainWindow(QWidget *parent) :
     setupWebView();
     readSettings();
     populateTable();
+
+    //emlparser eml("/home/volk/mail/test@test.com/incoming/2191.eml");
+    //eml.getHeader();
+    //eml.getBody();
 }
 
 MainWindow::~MainWindow()
@@ -124,17 +128,12 @@ void MainWindow::populateTable()
 void MainWindow::showTextMessage(QTableWidgetItem *item)
 {
     emlparser eml(this->tmp.at(item->row()));
-    eml.generateTmpHtml();
 
-    if (eml.isNoncompliantMail())
+    if (eml.getContentType() == "text/html")
         ui->fr_warning->show();
 
-    QFile ff(QDir::homePath() + "/.cache/cutemail-tmp.html");
-    ff.open(QFile::ReadOnly | QFile::Text);
-    QTextStream readFile(&ff);
-
     ui->textBrowser->clear();
-    ui->textBrowser->append(readFile.readAll());
+    ui->textBrowser->append(eml.getBody().first);
 
     QTextCursor cursor = ui->textBrowser->textCursor();
     cursor.setPosition(0);
@@ -146,20 +145,20 @@ void MainWindow::showFullMessage(QTableWidgetItem *item)
     ui->fr_warning->hide();
 
     emlparser eml(this->tmp.at(item->row()));
-    eml.generateTmpHtml();
-
-    ui->webView->setUrl(QUrl("file://" + QDir::homePath() + "/.cache/cutemail-tmp.html"));
-
-    ui->actionDelete->setEnabled(true);
-    ui->actionRestore->setEnabled(true);
+    ui->webView->setHtml(eml.getBody().first);
 }
 
 void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
 {
+    qDebug() << this->tmp.at(item->row());
+
     ui->fr_warning->hide();
     ui->webView->hide();
     ui->textBrowser->show();
     showTextMessage(item);
+
+    ui->actionDelete->setEnabled(true);
+    ui->actionRestore->setEnabled(true);
 }
 
 void MainWindow::on_actionFetch_mail_triggered()

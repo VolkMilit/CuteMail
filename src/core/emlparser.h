@@ -26,6 +26,7 @@
 #include <QVector>
 #include <QMessageBox>
 #include <QTextCodec>
+#include <QPair>
 
 #include <mimetic/mimetic.h>
 #include <iostream>
@@ -43,19 +44,46 @@ public:
     QString getFrom();
     QString getDate();
     QString getSubject();
+    QString getContentType();
     void generateTmpHtml();
     bool isNoncompliantMail();
+    QPair<QString, QString> getBody();
 
 private:
     QString msgfile;
     QString enconding;
     bool isnoncompliant;
+    int lastpos;
+
+    void parseHeader();
+    void parseBody();
 
     bool isMultipart();
     QString getBoundary();
     QString findBody();
-    void decode();
+    void trydecode();
     QString getHeaderValue(const std::string &field);
+
+    QByteArray& decodeqp(const QString &input);
+
+    QString decodeall(const QString &str);
+    QString findNextStr(QTextStream &in, QString str);
+
+    struct header
+    {
+        QString to;
+        QString subject;
+        QString from;
+        QString cte;
+        QString ct;
+        QString date;
+    } header;
+
+    struct body
+    {
+        QString first;
+        QString second;
+    } body;
 };
 
 #endif // EMLPARSER_H
