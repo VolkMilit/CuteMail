@@ -176,7 +176,7 @@ void emlparser::parseBody()
             continue;
         }
 
-        if (line.contains("Content-Type") || line.contains("charset"))
+        if (line.contains("Content-Type:") || line.contains("charset") && !line.contains("meta"))
             continue;
 
         if (line.contains("Content-Transfer-Encoding"))
