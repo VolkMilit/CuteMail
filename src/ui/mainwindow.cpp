@@ -295,6 +295,8 @@ void MainWindow::readSettings()
             break;
         }
     }
+
+    setWindowTitle(getCurrentAccount().at(0) + " - CuteMail");
 }
 
 void MainWindow::writeSettings()
