@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->fr_warning->hide();
 
     populateTreeWidget();
-    setupWebView();
+    setupView();
     readSettings();
     populateTable();
 }
@@ -121,8 +121,10 @@ void MainWindow::populateTable()
     }
 }
 
-void MainWindow::showTextMessage(QTableWidgetItem *item)
+void MainWindow::showTextMessage()
 {
+    QTableWidgetItem *item = ui->tb_mails->currentItem();
+
     emlparser eml(this->tmp.at(item->row()));
 
     if (!eml.getUsubscribelist().isEmpty())
@@ -131,7 +133,12 @@ void MainWindow::showTextMessage(QTableWidgetItem *item)
         ui->actionActionUnsubscribe->setEnabled(false);
 
     if (eml.isNoncompliantMail())
-        ui->fr_warning->show();
+    {
+        connect(ui->bt_chngview, &QPushButton::clicked, this, &MainWindow::showFullMessage);
+        showSplash("CuteMail detected this message can display"
+                   "incorrectly. Click this button to show full"
+                   "(using webview).", "Show full");
+    }
 
     ui->textBrowser->clear();
     ui->textBrowser->append(eml.getBody().first);
@@ -141,8 +148,12 @@ void MainWindow::showTextMessage(QTableWidgetItem *item)
     ui->textBrowser->setTextCursor(cursor);
 }
 
-void MainWindow::showFullMessage(QTableWidgetItem *item)
+void MainWindow::showFullMessage()
 {
+    QTableWidgetItem *item = ui->tb_mails->currentItem();
+
+    ui->webView->show();
+    ui->textBrowser->hide();
     ui->fr_warning->hide();
 
     emlparser eml(this->tmp.at(item->row()));
@@ -160,7 +171,12 @@ void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
     ui->fr_warning->hide();
     ui->webView->hide();
     ui->textBrowser->show();
-    showTextMessage(item);
+
+    ui->statusBar->showMessage("Loading...");
+
+    showTextMessage();
+
+    ui->statusBar->showMessage("Done.");
 
     ui->actionDelete->setEnabled(true);
     ui->actionRestore->setEnabled(true);
@@ -194,8 +210,7 @@ void MainWindow::askForPassword(QString server, QString protocol, QString userna
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    event = nullptr; // shut up the compiller, whithout parametr function just not working
-    writeSettings();
+    (void*)event; // shut up the compiller, whithout parametr function just not working
 }
 
 void MainWindow::on_actionDelete_triggered()
@@ -220,15 +235,6 @@ void MainWindow::on_actionManage_accounts_triggered()
     accountswindow->done(0);
 }
 
-void MainWindow::on_bt_chngview_clicked()
-{
-    QTableWidgetItem *item = ui->tb_mails->currentItem();
-
-    ui->webView->show();
-    ui->textBrowser->hide();
-    showFullMessage(item);
-}
-
 void MainWindow::on_treeWidget_itemSelectionChanged()
 {
     QTreeWidgetItem *item = ui->treeWidget->currentItem();
@@ -249,9 +255,13 @@ void MainWindow::on_treeWidget_itemSelectionChanged()
 }
 
 // there will be all webview-related settings
-// todo: probably javascript still may be executing, need to off it down
-void MainWindow::setupWebView()
+void MainWindow::setupView()
 {
+    ui->textBrowser->setOpenExternalLinks(true);
+
+    ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    connect(ui->webView, &QWebView::linkClicked, this, &MainWindow::openExternal);
+
     ui->webView->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
     ui->webView->settings()->setAttribute(QWebSettings::JavaEnabled, false);
     ui->webView->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
@@ -263,6 +273,20 @@ void MainWindow::setupWebView()
     ui->webView->settings()->setDefaultTextEncoding("utf-8");
 
     ui->webView->hide();
+}
+
+void MainWindow::openExternal(const QUrl &url)
+{
+    if (setting->getUseXDGBrowser() == 1)
+    {
+        QDesktopServices::openUrl(url.toString());
+    }
+    else
+    {
+        ui->webView->load(url);
+        connect(ui->bt_chngview, &QPushButton::clicked, this, &MainWindow::showFullMessage);
+        showSplash("Using external browser is disabled. You can go back, click this button.", "Go back");
+    }
 }
 
 void MainWindow::readSettings()
@@ -325,12 +349,20 @@ void MainWindow::on_actionActionUnsubscribe_triggered()
     emlparser eml(this->tmp.at(item->row()));
 
     if (setting->getUseXDGBrowser() == 1)
+        QDesktopServices::openUrl(eml.getUsubscribelist());
+    else
     {
-        QProcess xdg;
-        xdg.start("xdg-open " + eml.getUsubscribelist());
+       ui->webView->show();
+       ui->textBrowser->hide();
+       ui->webView->setUrl(eml.getUsubscribelist());
     }
-    /*else
-    {
-       // todo: open another browser window
-    }*/
+}
+
+void MainWindow::showSplash(const QString &str, const QString &btnstr)
+{
+    if (ui->fr_warning->isHidden())
+        ui->fr_warning->show();
+
+    ui->lb_warning->setText(str);
+    ui->bt_chngview->setText(btnstr);
 }

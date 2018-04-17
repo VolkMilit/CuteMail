@@ -183,7 +183,7 @@ void settings::setDisplayMessageOnce(int value)
 
 int settings::getDisplayMessageOnce()
 {
-    readInt(settingsBase, "readonly", "DisplayMessageOnce");
+    return readInt(settingsBase, "readonly", "DisplayMessageOnce");
 }
 
 // TableHeadersWight

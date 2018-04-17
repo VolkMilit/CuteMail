@@ -30,6 +30,9 @@
 #include <QFileSystemModel>
 #include <QItemSelection>
 #include <QStandardItemModel>
+#include <QDesktopServices>
+#include <QWebPage>
+#include <QPointer>
 
 #include "core/generate.h"
 #include "core/maildir.h"
@@ -51,28 +54,28 @@ public:
 private slots:
     void on_tb_mails_itemClicked(QTableWidgetItem *item);
     void on_actionFetch_mail_triggered();
-    void populateTable();
     void on_actionDelete_triggered();
     void on_actionRestore_triggered();
     void on_actionManage_accounts_triggered();
-    void on_bt_chngview_clicked();
     void on_treeWidget_itemSelectionChanged();
     void on_actionSettings_triggered();
-
     void on_actionActionUnsubscribe_triggered();
+    void openExternal(const QUrl &url);
+
+    void showTextMessage();
+    void showFullMessage();
 
 protected:
     void closeEvent(QCloseEvent *event);
 
 private:
+    void populateTable();
     void askForPassword(QString server, QString protocol, QString username);
-    void setupWebView();
+    void setupView();
     void populateTreeWidget();
     void readSettings();
     void writeSettings();
-
-    void showTextMessage(QTableWidgetItem *item);
-    void showFullMessage(QTableWidgetItem *item);
+    void showSplash(const QString &str, const QString &btnstr);
 
     QStringList getCurrentAccount();
 

@@ -116,16 +116,14 @@
          <item>
           <widget class="QLabel" name="lb_warning">
            <property name="text">
-            <string>CuteMail detected this message can display
-incorrectly. Click this button to show full
-(using webview).</string>
+            <string/>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="bt_chngview">
            <property name="text">
-            <string>Show full</string>
+            <string/>
            </property>
           </widget>
          </item>
