@@ -1,4 +1,4 @@
-# CuteMail
+# ![CuteMail logo](logo/logo.png) CuteMail
 All mail clients suck. This one just sucks less. (c) circa (mutt)
 
 Yet another GUI email client that sucks less.
@@ -45,4 +45,5 @@ Creating:
 - libmimetic (at this moment used like 1% of the futures, because it was simplier to write own parser)
 
 ### LICENSE
-See LICENSE in root repository.
+See [LICENSE](LICENSE) in root repository.
+CuteMail logo by Baran Pirinçal, [MIT](logo/LICENSE) license.
