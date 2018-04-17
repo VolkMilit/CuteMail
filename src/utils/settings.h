@@ -49,22 +49,6 @@ public:
 
     /*settings.ini*/
     // [general]
-    // TableHeadersWight
-    void setTableHeadersWight(QString value);
-    QString getTableHeadersWight();
-
-    // SplitterSizes
-    void setSplitterSizes(QByteArray value);
-    QString getSplitterSizes();
-
-    // WindowDemention
-    void setWindowDemention(QString value);
-    QString getWindowDemention();
-
-    // WindowFullscreen
-    void setWindowFullscreen(QString value);
-    QString getWindowFullscreen();
-
     // LastAccount
     void setLastAccount(QString value);
     QString getLastAccount();
@@ -100,6 +84,27 @@ public:
     // DisplayMessageOnce
     void setDisplayMessageOnce(int value);
     int getDisplayMessageOnce();
+
+    // UseXDGBrowser
+    void setUseXDGBrowser(int value);
+    int getUseXDGBrowser();
+
+    // [readonly]
+    // TableHeadersWight
+    void setTableHeadersWight(QString value);
+    QString getTableHeadersWight();
+
+    // SplitterSizes
+    void setSplitterSizes(QByteArray value);
+    QString getSplitterSizes();
+
+    // WindowDemention
+    void setWindowDemention(QString value);
+    QString getWindowDemention();
+
+    // WindowFullscreen
+    void setWindowFullscreen(QString value);
+    QString getWindowFullscreen();
 
     bool settingsFile();
 

@@ -138,7 +138,11 @@ incorrectly. Click this button to show full
          </url>
         </property>
        </widget>
-       <widget class="QTextBrowser" name="textBrowser"/>
+       <widget class="QTextBrowser" name="textBrowser">
+        <property name="openExternalLinks">
+         <bool>true</bool>
+        </property>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -182,6 +186,7 @@ incorrectly. Click this button to show full
    <addaction name="actionFetch_mail"/>
    <addaction name="actionDelete"/>
    <addaction name="actionRestore"/>
+   <addaction name="actionActionUnsubscribe"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit_Ctrl_Q">
@@ -221,6 +226,14 @@ incorrectly. Click this button to show full
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionActionUnsubscribe">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Unsubscribe</string>
    </property>
   </action>
  </widget>

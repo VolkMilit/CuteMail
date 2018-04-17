@@ -142,6 +142,15 @@ void emlparser::parseHeader()
             this->header.ct = ct.split(";").at(0);
         }
 
+        if (field.at(0) == "List-Unsubscribe")
+        {
+            QString uslst = field.at(1);
+            uslst.remove("<");
+            uslst.remove(">");
+
+            this->header.usubscribelist = uslst;
+        }
+
         if (line.isEmpty())
         {
             lastpos = in.pos();
@@ -409,6 +418,11 @@ QString emlparser::getSubject()
 QString emlparser::getContentType()
 {
     return this->header.ct;
+}
+
+QString emlparser::getUsubscribelist()
+{
+    return this->header.usubscribelist;
 }
 
 QString emlparser::getHeaderValue(const std::string &field)

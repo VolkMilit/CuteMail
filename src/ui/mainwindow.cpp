@@ -37,10 +37,6 @@ MainWindow::MainWindow(QWidget *parent) :
     setupWebView();
     readSettings();
     populateTable();
-
-    //emlparser eml("/home/volk/mail/test@test.com/incoming/2191.eml");
-    //eml.getHeader();
-    //eml.getBody();
 }
 
 MainWindow::~MainWindow()
@@ -128,6 +124,11 @@ void MainWindow::populateTable()
 void MainWindow::showTextMessage(QTableWidgetItem *item)
 {
     emlparser eml(this->tmp.at(item->row()));
+
+    if (!eml.getUsubscribelist().isEmpty())
+        ui->actionActionUnsubscribe->setEnabled(true);
+    else
+        ui->actionActionUnsubscribe->setEnabled(false);
 
     if (eml.isNoncompliantMail())
         ui->fr_warning->show();
@@ -316,4 +317,20 @@ void MainWindow::on_actionSettings_triggered()
 {
     settingsdialog->exec();
     settingsdialog->done(0);
+}
+
+void MainWindow::on_actionActionUnsubscribe_triggered()
+{
+    QTableWidgetItem *item = ui->tb_mails->currentItem();
+    emlparser eml(this->tmp.at(item->row()));
+
+    if (setting->getUseXDGBrowser() == 1)
+    {
+        QProcess xdg;
+        xdg.start("xdg-open " + eml.getUsubscribelist());
+    }
+    /*else
+    {
+       // todo: open another browser window
+    }*/
 }

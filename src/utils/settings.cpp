@@ -163,6 +163,17 @@ int settings::getDisplayNotify()
     return readInt(settingsBase, "General", "DisplayNotify");
 }
 
+// UseXDGBrowser
+void settings::setUseXDGBrowser(int value)
+{
+    write(settingsBase, "General", "UseXDGBrowser", value);
+}
+
+int settings::getUseXDGBrowser()
+{
+    return readInt(settingsBase, "General", "UseXDGBrowser");
+}
+
 // [readonly] for program-generated values
 // DisplayMessageOnce
 void settings::setDisplayMessageOnce(int value)

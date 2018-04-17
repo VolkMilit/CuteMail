@@ -14,6 +14,7 @@ settingsDialog::settingsDialog(QWidget *parent) :
         displayonce = true;
 
     ui->le_path_mailbox->setText(QDir::homePath() + "/mail");
+    ui->cb_usexdgbrowser->setChecked(true);
     readSettings();
 }
 
@@ -32,6 +33,7 @@ void settingsDialog::readSettings()
     ui->sp_seconds_tocheck->setValue(setting->getCheckAfter());
     ui->cb_trayicon->setChecked(setting->getDisplayTray() ? true : false);
     ui->cb_notify->setChecked(setting->getDisplayNotify() ? true : false);
+    ui->cb_usexdgbrowser->setChecked(setting->getUseXDGBrowser() ? true : false);
 }
 
 void settingsDialog::writeSettings()
@@ -43,6 +45,7 @@ void settingsDialog::writeSettings()
     setting->setCheckAfter(ui->sp_seconds_tocheck->value());
     setting->setDisplayTray(ui->cb_trayicon->isChecked() ? 1 : 0);
     setting->setDisplayNotify(ui->cb_notify->isChecked() ? 1 : 0);
+    setting->setUseXDGBrowser(ui->cb_usexdgbrowser->isChecked() ? 1 : 0);
 }
 
 void settingsDialog::on_cb_alwayswebview_clicked()

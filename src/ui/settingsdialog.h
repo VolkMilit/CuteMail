@@ -19,11 +19,8 @@ public:
 
 private slots:
     void on_cb_alwayswebview_clicked();
-
     void on_cb_automaticallywebview_clicked();
-
     void on_buttonBox_accepted();
-
     void on_buttonBox_rejected();
 
 private:

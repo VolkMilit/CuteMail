@@ -59,6 +59,8 @@ private slots:
     void on_treeWidget_itemSelectionChanged();
     void on_actionSettings_triggered();
 
+    void on_actionActionUnsubscribe_triggered();
+
 protected:
     void closeEvent(QCloseEvent *event);
 

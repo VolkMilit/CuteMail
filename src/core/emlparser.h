@@ -45,6 +45,7 @@ public:
     QString getDate();
     QString getSubject();
     QString getContentType();
+    QString getUsubscribelist();
     void generateTmpHtml();
     bool isNoncompliantMail();
     QPair<QString, QString> getBody();
@@ -77,6 +78,7 @@ private:
         QString cte;
         QString ct;
         QString date;
+        QString usubscribelist;
     } header;
 
     struct body
