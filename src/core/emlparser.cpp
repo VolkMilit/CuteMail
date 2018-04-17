@@ -148,6 +148,18 @@ void emlparser::parseHeader()
             uslst.remove("<");
             uslst.remove(">");
 
+            QStringList lst = uslst.split(",");
+            for (QString l : lst)
+            {
+                if (l.split(":").at(0) == "http" || l.split(":").at(0) == "https")
+                {
+                    uslst = l;
+                    break;
+                }
+                else
+                    uslst = l;
+            }
+
             this->header.usubscribelist = uslst;
         }
 
