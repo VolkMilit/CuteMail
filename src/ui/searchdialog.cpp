@@ -6,6 +6,8 @@ searchDialog::searchDialog(QWidget *parent) :
     ui(new Ui::searchDialog)
 {
     ui->setupUi(this);
+
+    this->setWindowTitle("Search...");
 }
 
 searchDialog::~searchDialog()
