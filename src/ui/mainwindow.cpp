@@ -382,3 +382,11 @@ void MainWindow::on_actionAdd_new_account_triggered()
 
     populateTreeWidget();
 }
+
+void MainWindow::on_actionAbout_CuteMail_triggered()
+{
+    aboutDialog about;
+    about.setModal(true);
+    about.exec();
+    about.done(0);
+}

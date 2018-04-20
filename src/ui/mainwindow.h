@@ -40,6 +40,7 @@
 #include "core/mailfetch.h"
 #include "ui/accountswindow.h"
 #include "ui/settingsdialog.h"
+#include "ui/aboutdialog.h"
 
 namespace Ui {class MainWindow;}
 
@@ -66,6 +67,8 @@ private slots:
     void showFullMessage();
 
     void on_actionAdd_new_account_triggered();
+
+    void on_actionAbout_CuteMail_triggered();
 
 protected:
     void closeEvent(QCloseEvent *event);

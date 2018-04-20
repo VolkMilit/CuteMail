@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>CuteMail</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/images/icon.png</normaloff>:/images/icon.png</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <property name="layoutDirection">
     <enum>Qt::LeftToRight</enum>
@@ -169,8 +173,15 @@
     <addaction name="actionAdd_new_account"/>
     <addaction name="actionManage_accounts"/>
    </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionAbout_CuteMail"/>
+   </widget>
    <addaction name="menuFIle"/>
    <addaction name="menuAccounts"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
@@ -240,6 +251,11 @@
     <string>Add new account</string>
    </property>
   </action>
+  <action name="actionAbout_CuteMail">
+   <property name="text">
+    <string>About CuteMail</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -249,6 +265,8 @@
    <header>QtWebKitWidgets/QWebView</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
