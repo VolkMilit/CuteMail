@@ -404,6 +404,10 @@ void MainWindow::on_actionFind_triggered()
         ui->tb_mails->clearSelection();
 
         QString searchstr = search.getString();
+
+        if (searchstr.isEmpty())
+            return;
+
         int casesense = search.getCase();
         int searchby;
         int firstcoins = search.getFirstCoins();
