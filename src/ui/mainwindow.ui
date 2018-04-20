@@ -194,6 +194,8 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionFetch_mail"/>
+   <addaction name="actionFind"/>
+   <addaction name="separator"/>
    <addaction name="actionDelete"/>
    <addaction name="actionRestore"/>
    <addaction name="actionActionUnsubscribe"/>
@@ -254,6 +256,11 @@
   <action name="actionAbout_CuteMail">
    <property name="text">
     <string>About CuteMail</string>
+   </property>
+  </action>
+  <action name="actionFind">
+   <property name="text">
+    <string>Search</string>
    </property>
   </action>
  </widget>

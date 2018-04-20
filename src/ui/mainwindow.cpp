@@ -390,3 +390,44 @@ void MainWindow::on_actionAbout_CuteMail_triggered()
     about.exec();
     about.done(0);
 }
+
+void MainWindow::on_actionFind_triggered()
+{
+    QItemSelectionModel *selectionModel = ui->tb_mails->selectionModel();
+    QItemSelection itemSelection = selectionModel->selection();
+
+    searchDialog search;
+    search.setModal(true);
+
+    if (search.exec())
+    {
+        ui->tb_mails->clearSelection();
+
+        QString searchstr = search.getString();
+        int casesense = search.getCase();
+        int searchby;
+        int firstcoins = search.getFirstCoins();
+
+        if (search.getSearchby() == search.searchby::ALL)
+            searchby = 0; // todo
+        else
+            searchby = search.getSearchby() - 1;
+
+        for (auto i = 0; i < ui->tb_mails->rowCount(); i++)
+        {
+            if (ui->tb_mails->item(i, searchby)->text().contains(searchstr,
+                                    casesense ? Qt::CaseSensitive : Qt::CaseInsensitive))
+            {
+                ui->tb_mails->selectRow(i);
+                itemSelection.merge(selectionModel->selection(), QItemSelectionModel::Select);
+                selectionModel->clearSelection();
+                selectionModel->select(itemSelection, QItemSelectionModel::Select);
+
+                if (firstcoins)
+                    break;
+            }
+        }
+    }
+
+    search.done(0);
+}

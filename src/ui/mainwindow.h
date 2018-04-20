@@ -41,6 +41,7 @@
 #include "ui/accountswindow.h"
 #include "ui/settingsdialog.h"
 #include "ui/aboutdialog.h"
+#include "ui/searchdialog.h"
 
 namespace Ui {class MainWindow;}
 
@@ -69,6 +70,8 @@ private slots:
     void on_actionAdd_new_account_triggered();
 
     void on_actionAbout_CuteMail_triggered();
+
+    void on_actionFind_triggered();
 
 protected:
     void closeEvent(QCloseEvent *event);

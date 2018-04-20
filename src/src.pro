@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     utils/utils.cpp \
     ui/settingsdialog.cpp \
     ui/newaccdialog.cpp \
-    ui/aboutdialog.cpp
+    ui/aboutdialog.cpp \
+    ui/searchdialog.cpp
 
 HEADERS  += ui/mainwindow.h \
     ui/accountswindow.h \
@@ -50,13 +51,15 @@ HEADERS  += ui/mainwindow.h \
     third-party/Qt-Quoted-Printable/quotedprintable.h \
     ui/settingsdialog.h \
     ui/newaccdialog.h \
-    ui/aboutdialog.h
+    ui/aboutdialog.h \
+    ui/searchdialog.h
     
 FORMS    += ui/mainwindow.ui \
     ui/accountswindow.ui \
     ui/settingsdialog.ui \
     ui/newaccdialog.ui \
-    ui/aboutdialog.ui
+    ui/aboutdialog.ui \
+    ui/searchdialog.ui
 
 RESOURCES += \
     ui/resources.qrc
