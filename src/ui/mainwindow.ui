@@ -166,6 +166,7 @@
     <property name="title">
      <string>Accounts</string>
     </property>
+    <addaction name="actionAdd_new_account"/>
     <addaction name="actionManage_accounts"/>
    </widget>
    <addaction name="menuFIle"/>
@@ -232,6 +233,11 @@
    </property>
    <property name="text">
     <string>Unsubscribe</string>
+   </property>
+  </action>
+  <action name="actionAdd_new_account">
+   <property name="text">
+    <string>Add new account</string>
    </property>
   </action>
  </widget>

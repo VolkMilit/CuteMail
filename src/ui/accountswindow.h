@@ -20,9 +20,11 @@
 #define ACCOUNTSWINDOW_H
 
 #include <QDialog>
+#include <QMessageBox>
 
 #include "utils/settings.h"
 #include "core/generate.h"
+#include "ui/newaccdialog.h"
 
 namespace Ui {
 class accountsWindow;
@@ -40,6 +42,8 @@ private slots:
     void on_btn_new_clicked();
     void on_lw_accounts_clicked(const QModelIndex &index);
     void on_buttonBox_rejected();
+
+    void on_btn_delete_clicked();
 
 private:
     void populateAccountsList();

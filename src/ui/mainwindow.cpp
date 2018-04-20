@@ -25,9 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     gen(new cmgenerate()),
     setting(new settings()),
-    maild(new mailDir()),
-    accountswindow(new accountsWindow(parent)),
-    settingsdialog(new settingsDialog(parent))
+    maild(new mailDir())
 {
     ui->setupUi(this);
 
@@ -43,9 +41,9 @@ MainWindow::~MainWindow()
 {
     tmp.clear(); // just in case
 
+    delete maild;
     delete gen;
     delete setting;
-    delete maild;
     delete ui;
 }
 
@@ -69,6 +67,8 @@ QStringList MainWindow::getCurrentAccount()
 
 void MainWindow::populateTreeWidget()
 {
+    ui->treeWidget->clear();
+
     QDir dirs(gen->getMailFolderPath());
     QStringList acclist = dirs.entryList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot);
 
@@ -231,8 +231,12 @@ void MainWindow::on_actionRestore_triggered()
 
 void MainWindow::on_actionManage_accounts_triggered()
 {
-    accountswindow->exec();
-    accountswindow->done(0);
+    accountsWindow accountswindow;
+    accountswindow.setModal(true);
+    accountswindow.exec();
+    accountswindow.done(0);
+
+    populateTreeWidget();
 }
 
 void MainWindow::on_treeWidget_itemSelectionChanged()
@@ -339,8 +343,10 @@ void MainWindow::writeSettings()
 
 void MainWindow::on_actionSettings_triggered()
 {
-    settingsdialog->exec();
-    settingsdialog->done(0);
+    settingsDialog settingsdialog;
+    settingsdialog.setModal(true);
+    settingsdialog.exec();
+    settingsdialog.done(0);
 }
 
 void MainWindow::on_actionActionUnsubscribe_triggered()
@@ -365,4 +371,14 @@ void MainWindow::showSplash(const QString &str, const QString &btnstr)
 
     ui->lb_warning->setText(str);
     ui->bt_chngview->setText(btnstr);
+}
+
+void MainWindow::on_actionAdd_new_account_triggered()
+{
+    newaccdialog acc;
+    acc.setModal(true);
+    acc.exec();
+    acc.done(0);
+
+    populateTreeWidget();
 }

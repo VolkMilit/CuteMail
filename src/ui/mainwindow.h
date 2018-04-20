@@ -65,6 +65,8 @@ private slots:
     void showTextMessage();
     void showFullMessage();
 
+    void on_actionAdd_new_account_triggered();
+
 protected:
     void closeEvent(QCloseEvent *event);
 
@@ -83,8 +85,6 @@ private:
     cmgenerate *gen;
     settings *setting;
     mailDir *maild;
-    accountsWindow *accountswindow;
-    settingsDialog *settingsdialog;
 
     QVector<QString> tmp;
 };

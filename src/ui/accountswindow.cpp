@@ -60,15 +60,18 @@ void accountsWindow::readAccount()
 
 void accountsWindow::on_btn_new_clicked()
 {
-    if (!ui->le_login->text().isEmpty() && !ui->le_server->text().isEmpty())
-        gen->accauntsFolders(ui->le_login->text() + "@" + ui->le_server->text());
+    newaccdialog dialog;
+    dialog.setModal(true);
+    dialog.exec();
+    dialog.done(0);
 
-    ui->lw_accounts->clear();
     populateAccountsList();
 }
 
 void accountsWindow::populateAccountsList()
 {
+    ui->lw_accounts->clear();
+
     QDir dir(gen->getMailFolderPath());
     const QStringList dirs = dir.entryList(QStringList(), QDir::Dirs | QDir::NoDotAndDotDot);
 
@@ -99,4 +102,26 @@ void accountsWindow::on_buttonBox_rejected()
 {
     writeAccount();
     this->close();
+}
+
+void accountsWindow::on_btn_delete_clicked()
+{
+    QListWidgetItem *item = ui->lw_accounts->currentItem();
+
+    QMessageBox msgBox;
+    msgBox.setModal(true);
+    msgBox.setText("Are you sure you want to delete " + item->text() + "? Warning! All data will be deleted too!");
+    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Cancel);
+    int ret = msgBox.exec();
+
+    if (ret == QMessageBox::Ok)
+    {
+        QDir dir(gen->getMailFolderPath() + item->text());
+        dir.removeRecursively();
+    }
+    else
+    {
+        return;
+    }
 }

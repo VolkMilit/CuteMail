@@ -32,9 +32,11 @@ SOURCES += main.cpp\
     core/maildir.cpp \
     core/emlparser.cpp \
     core/mailfetch.cpp \
+    third-party/Qt-Quoted-Printable/quotedprintable.cpp \
     utils/settings.cpp \
     utils/utils.cpp \
-    ui/settingsdialog.cpp
+    ui/settingsdialog.cpp \
+    ui/newaccdialog.cpp
 
 HEADERS  += ui/mainwindow.h \
     ui/accountswindow.h \
@@ -44,8 +46,11 @@ HEADERS  += ui/mainwindow.h \
     core/maildir.h \
     core/emlparser.h \
     core/mailfetch.h \
-    ui/settingsdialog.h
+    third-party/Qt-Quoted-Printable/quotedprintable.h \
+    ui/settingsdialog.h \
+    ui/newaccdialog.h
     
 FORMS    += ui/mainwindow.ui \
     ui/accountswindow.ui \
-    ui/settingsdialog.ui
+    ui/settingsdialog.ui \
+    ui/newaccdialog.ui
