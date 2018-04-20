@@ -1,4 +1,5 @@
-# ![CuteMail logo](logo/logo.png) CuteMail
+# CuteMail
+<img src="logo/logo.png?raw=true" width="150px" alt="logo"/> 
 All mail clients suck. This one just sucks less. (c) circa (mutt)
 
 Yet another GUI email client that sucks less.
