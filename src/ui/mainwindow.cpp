@@ -210,7 +210,8 @@ void MainWindow::askForPassword(QString server, QString protocol, QString userna
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    (void*)event; // shut up the compiller, whithout parametr function just not working
+    event = nullptr; // shut up the compiller, whithout parametr function just not working
+    writeSettings();
 }
 
 void MainWindow::on_actionDelete_triggered()
