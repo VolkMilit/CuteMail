@@ -23,7 +23,8 @@ with fixed formating.
 */
 
 mailfetch::mailfetch(QString account, QString server, QString password) :
-    gen(new cmgenerate())
+    gen(new cmgenerate()),
+    setting(new settings())
 {
     struct mailimap * imap;
     int r;
@@ -52,6 +53,7 @@ mailfetch::mailfetch(QString account, QString server, QString password) :
 mailfetch::~mailfetch()
 {
     delete gen;
+    delete setting;
 }
 
 void mailfetch::fetch_messages(mailimap *imap, const char *account)
@@ -62,6 +64,8 @@ void mailfetch::fetch_messages(mailimap *imap, const char *account)
     clist * fetch_result;
     clistiter * cur;
     int r;
+
+    database db(setting->getSettingsPath() + "accounts.db", QString(account));
 
     /* as improvement UIDVALIDITY should be read and the message cache should be cleaned
         if the UIDVALIDITY is not the same */
@@ -85,6 +89,12 @@ void mailfetch::fetch_messages(mailimap *imap, const char *account)
 
         if (uid == 0)
             continue;
+
+        if (fetch_type->ft_type == MAILIMAP_STATUS_ATT_UNSEEN)
+        {
+            //qDebug() << "UID " << uid << " unseen";
+            db.addValue("unseen", "status");
+        }
 
         this->fetch_msg(imap, uid, account);
     }

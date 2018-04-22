@@ -37,7 +37,9 @@ extern "C" {
 #endif
 
 #include "core/generate.h"
+#include "core/database.h"
 #include "utils/utils.h"
+#include "utils/settings.h"
 
 class mailfetch : private utils
 {
@@ -54,6 +56,7 @@ private:
     uint32_t get_uid(struct mailimap_msg_att * msg_att);
 
     cmgenerate *gen;
+    settings *setting;
 };
 
 #endif // MAILFETCH_H

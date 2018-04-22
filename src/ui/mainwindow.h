@@ -38,6 +38,7 @@
 #include "core/maildir.h"
 #include "core/emlparser.h"
 #include "core/mailfetch.h"
+#include "core/database.h"
 #include "ui/accountswindow.h"
 #include "ui/settingsdialog.h"
 #include "ui/aboutdialog.h"
@@ -62,16 +63,13 @@ private slots:
     void on_treeWidget_itemSelectionChanged();
     void on_actionSettings_triggered();
     void on_actionActionUnsubscribe_triggered();
-    void openExternal(const QUrl &url);
+    void on_actionAdd_new_account_triggered();
+    void on_actionAbout_CuteMail_triggered();
+    void on_actionFind_triggered();
 
+    void openExternal(const QUrl &url);
     void showTextMessage();
     void showFullMessage();
-
-    void on_actionAdd_new_account_triggered();
-
-    void on_actionAbout_CuteMail_triggered();
-
-    void on_actionFind_triggered();
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -93,6 +91,8 @@ private:
     mailDir *maild;
 
     QVector<QString> tmp;
+
+    int unseencount;
 };
 
 #endif // MAINWINDOW_H

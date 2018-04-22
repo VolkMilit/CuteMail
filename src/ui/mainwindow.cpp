@@ -91,6 +91,13 @@ void MainWindow::populateTreeWidget()
 
 void MainWindow::populateTable()
 {
+    database db(setting->getSettingsPath() + "accounts.db", getCurrentAccount().at(0));
+
+    int unread_count = 0;
+
+    QFont font;
+    font.setBold(true);
+
     ui->tb_mails->setRowCount(0); // clear table
 
     tmp.clear();
@@ -115,10 +122,23 @@ void MainWindow::populateTable()
 
         ui->tb_mails->insertRow(i);
 
+        if (db.getValue(i+1, "status").isEmpty())
+            db.addValue("unseen", "status");
+
+        if (db.getValue(i+1, "status") == "unseen")
+        {
+            unread_count++;
+            item1->setFont(font);
+            item2->setFont(font);
+            item3->setFont(font);
+        }
+
         ui->tb_mails->setItem(i, 0, item1);
         ui->tb_mails->setItem(i, 1, item2);
         ui->tb_mails->setItem(i, 2, item3);
     }
+
+    ui->statusBar->showMessage("Unreaded: " + QString::number(unread_count));
 }
 
 void MainWindow::showTextMessage()
@@ -180,6 +200,15 @@ void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
 
     ui->actionDelete->setEnabled(true);
     ui->actionRestore->setEnabled(true);
+
+
+    QFont font;
+    font.setBold(false);
+
+    database db(setting->getSettingsPath() + "accounts.db", getCurrentAccount().at(0));
+    db.overrideValue(item->row()+1, "read", "status");
+
+    item->setFont(font);
 }
 
 void MainWindow::on_actionFetch_mail_triggered()
