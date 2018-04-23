@@ -33,6 +33,7 @@
 #include <QDesktopServices>
 #include <QWebPage>
 #include <QPointer>
+#include <QTextEdit>
 
 #include "core/generate.h"
 #include "core/maildir.h"
@@ -71,8 +72,7 @@ private slots:
     void showTextMessage();
     void showFullMessage();
 
-protected:
-    void closeEvent(QCloseEvent *event);
+    void search(const QString &text);
 
 private:
     void populateTable();
@@ -82,6 +82,7 @@ private:
     void readSettings();
     void writeSettings();
     void showSplash(const QString &str, const QString &btnstr);
+    void setupMainwindow();
 
     QStringList getCurrentAccount();
 
@@ -91,8 +92,6 @@ private:
     mailDir *maild;
 
     QVector<QString> tmp;
-
-    int unseencount;
 };
 
 #endif // MAINWINDOW_H

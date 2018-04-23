@@ -35,16 +35,38 @@ MainWindow::MainWindow(QWidget *parent) :
     setupView();
     readSettings();
     populateTable();
+    setupMainwindow();
 }
 
 MainWindow::~MainWindow()
 {
     tmp.clear(); // just in case
 
+    writeSettings();
+
     delete maild;
     delete gen;
     delete setting;
     delete ui;
+}
+
+void MainWindow::setupMainwindow()
+{
+    // search widget in toolbar
+
+    QLineEdit *te = new QLineEdit;
+    QWidget *empty = new QWidget;
+    //QPushButton *bt = new QPushButton;
+
+    empty->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    te->setPlaceholderText("Search...");
+    //bt->setText("Search");
+
+    ui->toolBar->addWidget(empty);
+    ui->toolBar->addWidget(te);
+    //ui->toolBar->addWidget(bt);
+
+    connect(te, &QLineEdit::textChanged, this, &MainWindow::search);
 }
 
 QStringList MainWindow::getCurrentAccount()
@@ -114,8 +136,11 @@ void MainWindow::populateTable()
         QTableWidgetItem *item1 = new QTableWidgetItem;
         item1->setText(eml.getSubject());
 
+        QString from = eml.getFrom();
+        if (from.isEmpty())
+            from = eml.getReturnPath();
         QTableWidgetItem *item2 = new QTableWidgetItem;
-        item2->setText(eml.getFrom());
+        item2->setText(from);
 
         QTableWidgetItem *item3 = new QTableWidgetItem;
         item3->setText(eml.getDate());
@@ -146,6 +171,15 @@ void MainWindow::showTextMessage()
     QTableWidgetItem *item = ui->tb_mails->currentItem();
 
     emlparser eml(this->tmp.at(item->row()));
+    database db(setting->getSettingsPath() + "accounts.db", getCurrentAccount().at(0));
+
+    QString dbbody = db.getValue(item->row()+1, "body");
+
+    if (dbbody.isEmpty())
+    {
+        db.overrideValue(item->row()+1, eml.getBody().first, "body");
+        dbbody = eml.getBody().first;
+    }
 
     if (!eml.getUsubscribelist().isEmpty())
         ui->actionActionUnsubscribe->setEnabled(true);
@@ -161,7 +195,7 @@ void MainWindow::showTextMessage()
     }
 
     ui->textBrowser->clear();
-    ui->textBrowser->append(eml.getBody().first);
+    ui->textBrowser->append(dbbody);
 
     QTextCursor cursor = ui->textBrowser->textCursor();
     cursor.setPosition(0);
@@ -176,12 +210,31 @@ void MainWindow::showFullMessage()
     ui->textBrowser->hide();
     ui->fr_warning->hide();
 
-    emlparser eml(this->tmp.at(item->row()));
+    database db(setting->getSettingsPath() + "accounts.db", getCurrentAccount().at(0));
+    QString dbbody = db.getValue(item->row()+1, "bodyfull");
 
-    if (!eml.getBody().second.isEmpty())
+    if (dbbody.isEmpty())
+    {
+        emlparser eml(this->tmp.at(item->row()));
+
+        if (!eml.getBody().second.isEmpty())
+        {
+            db.overrideValue(item->row()+1, eml.getBody().second, "bodyfull");
+            dbbody = eml.getBody().second;
+        }
+        else
+        {
+            db.overrideValue(item->row()+1, eml.getBody().first, "bodyfull");
+            dbbody = eml.getBody().first;
+        }
+    }
+
+    ui->webView->setHtml(dbbody);
+
+    /*if (!eml.getBody().second.isEmpty())
         ui->webView->setHtml(eml.getBody().second);
     else
-        ui->webView->setHtml(eml.getBody().first);
+        ui->webView->setHtml(eml.getBody().first);*/
 }
 
 void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
@@ -235,12 +288,6 @@ void MainWindow::askForPassword(QString server, QString protocol, QString userna
     {
         QMessageBox::critical(this, "CuteMail", tr("Couldn't connect to ") + getCurrentAccount().at(0), QMessageBox::Ok);
     }
-}
-
-void MainWindow::closeEvent(QCloseEvent *event)
-{
-    event = nullptr; // shut up the compiller, whithout parametr function just not working
-    writeSettings();
 }
 
 void MainWindow::on_actionDelete_triggered()
@@ -421,6 +468,30 @@ void MainWindow::on_actionAbout_CuteMail_triggered()
     about.done(0);
 }
 
+void MainWindow::search(const QString &text)
+{
+    int rowcount = ui->tb_mails->rowCount();
+
+    if (text.isEmpty())
+    {
+        for (int i = 0; i < rowcount; i++)
+            ui->tb_mails->setRowHidden(i, false);
+
+        return;
+    }
+
+    for (auto i = 0; i < ui->tb_mails->rowCount(); i++)
+    {
+        QString megastring;
+        QString str1 = ui->tb_mails->item(i, 0)->text();
+        QString str2 = ui->tb_mails->item(i, 1)->text();
+        megastring = str1 + " " + str2;
+
+        if (!megastring.contains(text, Qt::CaseInsensitive))
+            ui->tb_mails->hideRow(i);
+    }
+}
+
 void MainWindow::on_actionFind_triggered()
 {
     QItemSelectionModel *selectionModel = ui->tb_mails->selectionModel();
@@ -439,18 +510,24 @@ void MainWindow::on_actionFind_triggered()
             return;
 
         int casesense = search.getCase();
-        int searchby;
+        int searchby = search.getSearchby();
         int firstcoins = search.getFirstCoins();
-
-        if (search.getSearchby() == search.searchby::ALL)
-            searchby = 0; // todo
-        else
-            searchby = search.getSearchby() - 1;
 
         for (auto i = 0; i < ui->tb_mails->rowCount(); i++)
         {
-            if (ui->tb_mails->item(i, searchby)->text().contains(searchstr,
-                                    casesense ? Qt::CaseSensitive : Qt::CaseInsensitive))
+            QString str1 = ui->tb_mails->item(i, 0)->text();
+            QString str2 = ui->tb_mails->item(i, 1)->text();
+            QString megastring = str1 + " " + str2;
+            QString str;
+
+            if (searchby == search.searchby::ALL)
+                str = megastring;
+            else if (searchby == search.searchby::SUBJECT)
+                str = str1;
+            else
+                str = str2;
+
+            if (str.contains(searchstr, casesense ? Qt::CaseSensitive : Qt::CaseInsensitive))
             {
                 ui->tb_mails->selectRow(i);
                 itemSelection.merge(selectionModel->selection(), QItemSelectionModel::Select);
