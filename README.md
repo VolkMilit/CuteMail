@@ -16,8 +16,9 @@ Yet another GUI email client that sucks less.
 
 <p align="center">
   <img src="screenshots/cutemail-main.png?raw=true" alt="Main screenshot"/>
-  <img src="screenshots/cutemail-textmail.png?raw=true" width="250px" height="140px" alt="Main window with text"/>
   <img src="screenshots/cutemail-htmlmail.png?raw=true" width="250px" height="140px" alt="Main window with html"/>
+  <img src="screenshots/cutemail-search1.png?raw=true" width="250px" height="140px" alt="Main window with text"/>
+  <img src="screenshots/cutemail-search2.png?raw=true" width="250px" height="140px" alt="Main window with text"/>
 </p>
 
 ### Why not using the web?
