@@ -104,34 +104,41 @@ void emlparser::parseHeader()
         if (field.at(0) == "Subject")
         {
             this->header.subject = decodeall(field.at(1));
+            int lastseek = in.pos();
 
-            in.seek(in.pos());
             while (!in.atEnd())
             {
-                QString subline = in.readLine();
+                line = in.readLine();
 
-                if (subline.at(0) == ' ')
-                    this->header.subject.append(decodeall(subline));
+                if (line.at(0) == ' ')
+                    this->header.subject.append(decodeall(line));
                 else
                     break;
             }
+
+            in.seek(lastseek);
         }
 
         if (field.at(0) == "From")
         {
             this->header.from = decodeall(field.at(1));
+            int lastseek = in.pos();
 
-            in.seek(in.pos());
             while (!in.atEnd())
             {
-                QString subline = in.readLine();
+                line = in.readLine();
 
-                if (subline.at(0) == ' ')
-                    this->header.from.append(decodeall(subline));
+                if (line.at(0) == ' ')
+                    this->header.from.append(decodeall(line));
                 else
                     break;
             }
+
+            in.seek(lastseek);
         }
+
+        if (field.at(0) == "Return-path")
+            this->header.returnpath = decodeall(field.at(1));
 
         if (field.at(0) == "Content-Transfer-Encoding")
             this->header.cte = field.at(1);
@@ -435,6 +442,11 @@ QString emlparser::getContentType()
 QString emlparser::getUsubscribelist()
 {
     return this->header.usubscribelist;
+}
+
+QString emlparser::getReturnPath()
+{
+    return this->header.returnpath;
 }
 
 QString emlparser::getHeaderValue(const std::string &field)
