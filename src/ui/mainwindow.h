@@ -33,7 +33,7 @@
 #include <QDesktopServices>
 #include <QWebPage>
 #include <QPointer>
-#include <QTextEdit>
+#include <QShortcut>
 
 #include "core/generate.h"
 #include "core/maildir.h"
@@ -71,18 +71,20 @@ private slots:
     void openExternal(const QUrl &url);
     void showTextMessage();
     void showFullMessage();
-
     void search(const QString &text);
 
 private:
     void populateTable();
-    void askForPassword(QString server, QString protocol, QString username);
-    void setupView();
     void populateTreeWidget();
+    void setupView();
+    void setupMainwindow();
+    void setupShortcuts();
+
     void readSettings();
     void writeSettings();
+
+    void askForPassword(QString server, QString protocol, QString username);
     void showSplash(const QString &str, const QString &btnstr);
-    void setupMainwindow();
 
     QStringList getCurrentAccount();
 

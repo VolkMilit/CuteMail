@@ -174,6 +174,18 @@ int settings::getUseXDGBrowser()
     return readInt(settingsBase, "General", "UseXDGBrowser");
 }
 
+// [Shortcuts] for user shortcuts
+// Search
+void settings::setShortcutSearch(QString value)
+{
+    write(settingsBase, "Shortcuts", "Search", value);
+}
+
+QString settings::getShortcutSearch()
+{
+    return read(settingsBase, "Shortcuts", "Search");
+}
+
 // [readonly] for program-generated values
 // DisplayMessageOnce
 void settings::setDisplayMessageOnce(int value)
@@ -198,7 +210,7 @@ QString settings::getTableHeadersWight()
 }
 
 // SplitterSizes
-void settings::setSplitterSizes(QByteArray value)
+void settings::setSplitterSizes(QString value)
 {
     write(settingsBase, "readonly", "SplitterSizes", value);
 }

@@ -16,42 +16,19 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef SETTINGSDIALOG_H
-#define SETTINGSDIALOG_H
+#ifndef QLESEARCH_H
+#define QLESEARCH_H
 
-#include <QDialog>
-#include <QMessageBox>
-#include <QDir>
+#include <QLineEdit>
+#include <QString>
 
-#include "utils/settings.h"
-
-namespace Ui { class settingsDialog; }
-
-class settingsDialog : public QDialog
+class QLESearch : public QLineEdit
 {
     Q_OBJECT
 
-public:
-    explicit settingsDialog(QWidget *parent = 0);
-    ~settingsDialog();
-
-private slots:
-    void on_cb_alwayswebview_clicked();
-    void on_cb_automaticallywebview_clicked();
-    void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
-    void on_lw_tabs_itemClicked();
-
-private:
-    Ui::settingsDialog *ui;
-    settings *setting;
-
-    void readSettings();
-    void writeSettings();
-
-    void setupWindow();
-
-    bool displayonce;
+    public:
+        QLESearch(QWidget *parent = 0);
+        ~QLESearch();
 };
 
-#endif // SETTINGSDIALOG_H
+#endif // QLESEARCH_H

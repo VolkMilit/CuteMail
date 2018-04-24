@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets webkit webkitwidgets
 
@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     ui/settingsdialog.cpp \
     ui/newaccdialog.cpp \
     ui/aboutdialog.cpp \
-    ui/searchdialog.cpp
+    ui/searchdialog.cpp \
+    core/database.cpp
 
 HEADERS  += ui/mainwindow.h \
     ui/accountswindow.h \
@@ -52,7 +53,8 @@ HEADERS  += ui/mainwindow.h \
     ui/settingsdialog.h \
     ui/newaccdialog.h \
     ui/aboutdialog.h \
-    ui/searchdialog.h
+    ui/searchdialog.h \
+    core/database.h
     
 FORMS    += ui/mainwindow.ui \
     ui/accountswindow.ui \

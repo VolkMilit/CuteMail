@@ -43,6 +43,7 @@ public:
 
     QString getTo();
     QString getFrom();
+    QString getReturnPath();
     QString getDate();
     QString getSubject();
     QString getContentType();
@@ -76,6 +77,7 @@ private:
         QString to;
         QString subject;
         QString from;
+        QString returnpath;
         QString cte;
         QString ct;
         QString date;

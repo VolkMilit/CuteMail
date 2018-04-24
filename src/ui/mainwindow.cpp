@@ -29,8 +29,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->fr_warning->hide();
-
     populateTreeWidget();
     setupView();
     readSettings();
@@ -52,21 +50,26 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupMainwindow()
 {
-    // search widget in toolbar
+    ui->fr_warning->hide();
 
-    QLineEdit *te = new QLineEdit;
+    // search widget in toolbar
+    QLineEdit *le_search = new QLineEdit;
     QWidget *empty = new QWidget;
-    //QPushButton *bt = new QPushButton;
+
+    QShortcut *sc_search = new QShortcut(QKeySequence(setting->getShortcutSearch()), this);
+    connect(sc_search, &QShortcut::activated, le_search, QOverload<>::of(&QLineEdit::setFocus));
 
     empty->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    te->setPlaceholderText("Search...");
-    //bt->setText("Search");
+    le_search->setPlaceholderText("Search... (" + setting->getShortcutSearch() + ")");
+    le_search->setClearButtonEnabled(true);
+    connect(le_search, &QLineEdit::textChanged, this, &MainWindow::search);
 
     ui->toolBar->addWidget(empty);
-    ui->toolBar->addWidget(te);
-    //ui->toolBar->addWidget(bt);
+    ui->toolBar->addWidget(le_search);
+}
 
-    connect(te, &QLineEdit::textChanged, this, &MainWindow::search);
+void MainWindow::setupShortcuts()
+{
 }
 
 QStringList MainWindow::getCurrentAccount()

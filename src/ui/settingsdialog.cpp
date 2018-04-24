@@ -1,3 +1,21 @@
+/*
+    CuteMail - simple mail client for GNU/Linux.
+    Copyright (C) 2018 Volk_Milit (aka Ja'Virr-Dar)
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
 
@@ -8,13 +26,7 @@ settingsDialog::settingsDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    if (setting->getDisplayMessageOnce() == 0)
-        displayonce = false;
-    else
-        displayonce = true;
-
-    ui->le_path_mailbox->setText(QDir::homePath() + "/mail");
-    ui->cb_usexdgbrowser->setChecked(true);
+    setupWindow();
     readSettings();
 }
 
@@ -22,6 +34,27 @@ settingsDialog::~settingsDialog()
 {
     delete setting;
     delete ui;
+}
+
+void settingsDialog::setupWindow()
+{
+    this->setWindowTitle("CuteMail settings");
+
+    if (setting->getDisplayMessageOnce() == 0)
+        displayonce = false;
+    else
+        displayonce = true;
+
+    // default settings
+    ui->le_path_mailbox->setText(QDir::homePath() + "/mail");
+    ui->cb_usexdgbrowser->setChecked(true);
+
+    // center align icons in listwidget
+    for (auto i = 0; i < ui->lw_tabs->count(); i++)
+    {
+        ui->lw_tabs->item(i)->setSizeHint(QSize(100, 52));
+        ui->lw_tabs->item(i)->setTextAlignment(Qt::AlignCenter);
+    }
 }
 
 void settingsDialog::readSettings()
@@ -86,4 +119,10 @@ void settingsDialog::on_buttonBox_accepted()
 void settingsDialog::on_buttonBox_rejected()
 {
     this->close();
+}
+
+void settingsDialog::on_lw_tabs_itemClicked()
+{
+     QModelIndex item = ui->lw_tabs->currentIndex();
+     ui->stackedWidget->setCurrentIndex(item.row());
 }

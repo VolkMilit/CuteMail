@@ -89,13 +89,18 @@ public:
     void setUseXDGBrowser(int value);
     int getUseXDGBrowser();
 
+    // [shortcuts]
+    // Search
+    void setShortcutSearch(QString value);
+    QString getShortcutSearch();
+
     // [readonly]
     // TableHeadersWight
     void setTableHeadersWight(QString value);
     QString getTableHeadersWight();
 
     // SplitterSizes
-    void setSplitterSizes(QByteArray value);
+    void setSplitterSizes(QString value);
     QString getSplitterSizes();
 
     // WindowDemention
