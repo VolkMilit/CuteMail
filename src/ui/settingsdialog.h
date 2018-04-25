@@ -23,12 +23,14 @@
 #include <QMessageBox>
 #include <QDir>
 #include <QTableWidgetItem>
+#include <QKeySequenceEdit>
 
 #include "utils/settings.h"
+#include "utils/utils.h"
 
 namespace Ui { class settingsDialog; }
 
-class settingsDialog : public QDialog
+class settingsDialog : public QDialog, private utils
 {
     Q_OBJECT
 

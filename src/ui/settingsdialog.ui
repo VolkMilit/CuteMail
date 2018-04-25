@@ -204,6 +204,39 @@
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
             <widget class="QTableWidget" name="tb_shortcuts">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Sunken</enum>
+             </property>
+             <property name="lineWidth">
+              <number>1</number>
+             </property>
+             <property name="midLineWidth">
+              <number>0</number>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>false</bool>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
+             <property name="gridStyle">
+              <enum>Qt::SolidLine</enum>
+             </property>
+             <attribute name="horizontalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>215</number>
+             </attribute>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
              <row>
               <property name="text">
                <string>1</string>
@@ -212,6 +245,16 @@
              <row>
               <property name="text">
                <string>2</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>3</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>4</string>
               </property>
              </row>
              <column>
@@ -234,12 +277,12 @@
              </item>
              <item row="0" column="1">
               <property name="text">
-               <string>Ctrl+F</string>
+               <string/>
               </property>
              </item>
              <item row="1" column="0">
               <property name="text">
-               <string>Delete</string>
+               <string>Delete mail</string>
               </property>
               <property name="flags">
                <set>ItemIsEnabled</set>
@@ -247,7 +290,17 @@
              </item>
              <item row="1" column="1">
               <property name="text">
-               <string>Del</string>
+               <string/>
+              </property>
+             </item>
+             <item row="2" column="0">
+              <property name="text">
+               <string>Fetch new mail</string>
+              </property>
+             </item>
+             <item row="3" column="0">
+              <property name="text">
+               <string>Close app</string>
               </property>
              </item>
             </widget>

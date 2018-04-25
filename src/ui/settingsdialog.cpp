@@ -41,6 +41,9 @@ void settingsDialog::setupWindow()
 {
     this->setWindowTitle("CuteMail settings");
 
+    for (auto i = 0; i < ui->tb_shortcuts->rowCount(); i++)
+        ui->tb_shortcuts->setCellWidget(i, 1, new QKeySequenceEdit);
+
     if (setting->getDisplayMessageOnce() == 0)
         displayonce = false;
     else
@@ -69,11 +72,14 @@ void settingsDialog::readSettings()
     ui->cb_notify->setChecked(setting->getDisplayNotify() ? true : false);
     ui->cb_usexdgbrowser->setChecked(setting->getUseXDGBrowser() ? true : false);
 
+
+    QKeySequenceEdit *tmpks;
     QStringList sc = setting->readGroup(setting->getSettingsFilePath(), "Shortcuts");
 
     for (auto i = 0; i < ui->tb_shortcuts->rowCount(); i++)
     {
-        QString item = ui->tb_shortcuts->item(i, 0)->text();
+        QString item = toCamelString(ui->tb_shortcuts->item(i, 0)->text());
+        tmpks = qobject_cast<QKeySequenceEdit*>(ui->tb_shortcuts->cellWidget(i, 1));
 
         for (auto s : sc)
         {
@@ -82,12 +88,14 @@ void settingsDialog::readSettings()
                 QString shortcut = setting->read(setting->getSettingsFilePath(), "Shortcuts", s);
 
                 if (!shortcut.isEmpty())
-                    ui->tb_shortcuts->item(i, 1)->setText(shortcut);
+                    tmpks->setKeySequence(QKeySequence(shortcut));
                 else
-                    continue;
+                    break;
             }
         }
     }
+
+    tmpks->deleteLater();
 }
 
 void settingsDialog::writeSettings()
@@ -101,13 +109,17 @@ void settingsDialog::writeSettings()
     setting->setDisplayNotify(ui->cb_notify->isChecked() ? 1 : 0);
     setting->setUseXDGBrowser(ui->cb_usexdgbrowser->isChecked() ? 1 : 0);
 
+    QKeySequenceEdit *tmpks;
+
     for (auto i = 0; i < ui->tb_shortcuts->rowCount(); i++)
     {
-        QString item = ui->tb_shortcuts->item(i, 0)->text();
-        QString value = ui->tb_shortcuts->item(i, 1)->text();
-
+        QString item = toCamelString(ui->tb_shortcuts->item(i, 0)->text());
+        tmpks = qobject_cast<QKeySequenceEdit*>(ui->tb_shortcuts->cellWidget(i, 1));
+        QString value = tmpks->keySequence().toString();
         setting->write(setting->getSettingsPath() + "settings.ini", "Shortcuts", item, value);
     }
+
+    tmpks->deleteLater();
 }
 
 void settingsDialog::on_cb_alwayswebview_clicked()

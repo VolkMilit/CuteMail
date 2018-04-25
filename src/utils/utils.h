@@ -43,6 +43,8 @@ protected:
     std::vector<std::string> stdSplit(const std::string &str, char delim);
 
     QTextStream &QStdErr();
+
+    QString toCamelString(const QString &s);
 };
 
 #endif // UTILS_H
