@@ -22,6 +22,7 @@
 #include <QDialog>
 #include <QMessageBox>
 #include <QDir>
+#include <QTableWidgetItem>
 
 #include "utils/settings.h"
 

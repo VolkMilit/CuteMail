@@ -247,6 +247,11 @@ QString settings::getSettingsPath()
     return settingsPath;
 }
 
+QString settings::getSettingsFilePath()
+{
+  return settingsBase;
+}
+
 void settings::write(QString file, QString group, QString value, QVariant var)
 {
     QSettings settings(file, QSettings::IniFormat);
@@ -274,6 +279,18 @@ int settings::readInt(QString file, QString group, QString value)
     QSettings settings(file, QSettings::IniFormat);
     settings.beginGroup(group);
     rv = settings.value(value).toInt();
+    settings.endGroup();
+
+    return rv;
+}
+
+QStringList settings::readGroup(QString file, QString group)
+{
+    QStringList rv;
+
+    QSettings settings(file, QSettings::IniFormat);
+    settings.beginGroup(group);
+    rv = settings.allKeys();
     settings.endGroup();
 
     return rv;

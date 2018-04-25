@@ -18,6 +18,7 @@
 
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
+#include <QDebug>
 
 settingsDialog::settingsDialog(QWidget *parent) :
     QDialog(parent),
@@ -67,6 +68,26 @@ void settingsDialog::readSettings()
     ui->cb_trayicon->setChecked(setting->getDisplayTray() ? true : false);
     ui->cb_notify->setChecked(setting->getDisplayNotify() ? true : false);
     ui->cb_usexdgbrowser->setChecked(setting->getUseXDGBrowser() ? true : false);
+
+    QStringList sc = setting->readGroup(setting->getSettingsFilePath(), "Shortcuts");
+
+    for (auto i = 0; i < ui->tb_shortcuts->rowCount(); i++)
+    {
+        QString item = ui->tb_shortcuts->item(i, 0)->text();
+
+        for (auto s : sc)
+        {
+            if (s == item)
+            {
+                QString shortcut = setting->read(setting->getSettingsFilePath(), "Shortcuts", s);
+
+                if (!shortcut.isEmpty())
+                    ui->tb_shortcuts->item(i, 1)->setText(shortcut);
+                else
+                    continue;
+            }
+        }
+    }
 }
 
 void settingsDialog::writeSettings()
@@ -79,6 +100,14 @@ void settingsDialog::writeSettings()
     setting->setDisplayTray(ui->cb_trayicon->isChecked() ? 1 : 0);
     setting->setDisplayNotify(ui->cb_notify->isChecked() ? 1 : 0);
     setting->setUseXDGBrowser(ui->cb_usexdgbrowser->isChecked() ? 1 : 0);
+
+    for (auto i = 0; i < ui->tb_shortcuts->rowCount(); i++)
+    {
+        QString item = ui->tb_shortcuts->item(i, 0)->text();
+        QString value = ui->tb_shortcuts->item(i, 1)->text();
+
+        setting->write(setting->getSettingsPath() + "settings.ini", "Shortcuts", item, value);
+    }
 }
 
 void settingsDialog::on_cb_alwayswebview_clicked()

@@ -32,7 +32,9 @@ public:
     void write(QString file, QString group, QString value, QVariant var);
     QString read(QString file, QString group, QString value);
     int readInt(QString file, QString group, QString value);
+    QStringList readGroup(QString file, QString group);
     QString getSettingsPath();
+    QString getSettingsFilePath();
 
     /*accounts.ini*/
     // ProxyString
