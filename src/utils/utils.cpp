@@ -21,7 +21,7 @@
 utils::utils(){}
 utils::~utils(){}
 
-QString utils::decodeQP(QString str)
+/*QString utils::decodeQP(QString str)
 {
     std::string str_std;
     mimetic::QP::Decoder qp;
@@ -71,7 +71,7 @@ std::string utils::decodeB64(const std::string &str)
                   std::back_inserter<std::string>(str_std));
 
     return str_std;
-}
+}*/
 
 /*
     Note that it is necessary to store the bytearray
@@ -116,4 +116,24 @@ QString utils::toCamelString(const QString &s)
         parts[i].replace(0, 1, parts[i][0].toUpper());
 
     return parts.join("");
+}
+
+QString utils::removeLastStrSymbol(const QString &str, const char s)
+{
+    QString tmp = str;
+
+    if (tmp.at(tmp.length()-1) == s)
+        tmp.remove(tmp.length()-1, tmp.length()-1);
+
+    return tmp;
+}
+
+QString utils::replaceLastStrSymbol(const QString &str, const char s, const char ss)
+{
+    QString tmp = str;
+
+    if (tmp.at(tmp.length()-1) == s)
+        tmp.replace(tmp.length()-1, tmp.length()-1, ss);
+
+    return tmp;
 }

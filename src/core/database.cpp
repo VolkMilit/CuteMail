@@ -21,17 +21,21 @@
 
 database::database(QString file, QString name)
 {
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(file);
     db.open();
 
     QSqlQuery query("CREATE TABLE '" + name + "' (id INTEGER PRIMARY KEY, body TEXT, bodyfull TEXT, status TEXT)");
-
     db.commit();
-    //db.close();
 
     m_file = file; // segfault without this, WTF?
     m_name = name;
+}
+
+database::~database()
+{
+    db.close();
+    db.removeDatabase("QSQLITE");
 }
 
 QString database::getValue(const int uid, const QString &field)

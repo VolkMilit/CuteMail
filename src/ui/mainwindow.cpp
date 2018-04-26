@@ -119,7 +119,6 @@ void MainWindow::populateTable()
     database db(setting->getSettingsPath() + "accounts.db", getCurrentAccount().at(0));
 
     int unread_count = 0;
-
     QFont font;
     font.setBold(true);
 
@@ -139,11 +138,8 @@ void MainWindow::populateTable()
         QTableWidgetItem *item1 = new QTableWidgetItem;
         item1->setText(eml.getSubject());
 
-        QString from = eml.getFrom();
-        if (from.isEmpty())
-            from = eml.getReturnPath();
         QTableWidgetItem *item2 = new QTableWidgetItem;
-        item2->setText(from);
+        item2->setText(eml.getFrom());
 
         QTableWidgetItem *item3 = new QTableWidgetItem;
         item3->setText(eml.getDate());
@@ -174,15 +170,15 @@ void MainWindow::showTextMessage()
     QTableWidgetItem *item = ui->tb_mails->currentItem();
 
     emlparser eml(this->tmp.at(item->row()));
-    database db(setting->getSettingsPath() + "accounts.db", getCurrentAccount().at(0));
+    //database db(setting->getSettingsPath() + "accounts.db", getCurrentAccount().at(0));
 
-    QString dbbody = db.getValue(item->row()+1, "body");
+    /*QString dbbody = db.getValue(item->row()+1, "body");
 
     if (dbbody.isEmpty())
     {
         db.overrideValue(item->row()+1, eml.getBody().first, "body");
         dbbody = eml.getBody().first;
-    }
+    }*/
 
     if (!eml.getUsubscribelist().isEmpty())
         ui->actionActionUnsubscribe->setEnabled(true);
@@ -198,7 +194,8 @@ void MainWindow::showTextMessage()
     }
 
     ui->textBrowser->clear();
-    ui->textBrowser->append(dbbody);
+    //ui->textBrowser->append(dbbody);
+    ui->textBrowser->append(eml.getBody().first);
 
     QTextCursor cursor = ui->textBrowser->textCursor();
     cursor.setPosition(0);
@@ -213,7 +210,9 @@ void MainWindow::showFullMessage()
     ui->textBrowser->hide();
     ui->fr_warning->hide();
 
-    database db(setting->getSettingsPath() + "accounts.db", getCurrentAccount().at(0));
+    emlparser eml(this->tmp.at(item->row()));
+
+    /*database db(setting->getSettingsPath() + "accounts.db", getCurrentAccount().at(0));
     QString dbbody = db.getValue(item->row()+1, "bodyfull");
 
     if (dbbody.isEmpty())
@@ -230,14 +229,14 @@ void MainWindow::showFullMessage()
             db.overrideValue(item->row()+1, eml.getBody().first, "bodyfull");
             dbbody = eml.getBody().first;
         }
-    }
+    }*/
 
-    ui->webView->setHtml(dbbody);
+    //ui->webView->setHtml(dbbody);
 
-    /*if (!eml.getBody().second.isEmpty())
+    if (!eml.getBody().second.isEmpty())
         ui->webView->setHtml(eml.getBody().second);
     else
-        ui->webView->setHtml(eml.getBody().first);*/
+        ui->webView->setHtml(eml.getBody().first);
 }
 
 void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)

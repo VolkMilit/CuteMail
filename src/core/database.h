@@ -31,6 +31,7 @@ class database
 {
 public:
     database(QString file, QString name);
+    ~database();
 
     QString getValue(const int uid, const QString &field);
     void addValue(const QString &value, const QString &field);
@@ -39,6 +40,8 @@ public:
 private:
     QString m_file;
     QString m_name;
+
+    QSqlDatabase db;
 };
 
 #endif // DATABASE_H

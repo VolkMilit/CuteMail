@@ -28,12 +28,8 @@
 #include <QTextCodec>
 #include <QPair>
 
-#include <mimetic/mimetic.h>
-#include <iostream>
-#include <vector>
-
 #include "utils/utils.h"
-//#include "third-party/Qt-Quoted-Printable/quotedprintable.h"
+#include "third-party/Qt-Quoted-Printable/quotedprintable.h"
 
 class emlparser : private utils
 {
@@ -48,7 +44,6 @@ public:
     QString getSubject();
     QString getContentType();
     QString getUsubscribelist();
-    void generateTmpHtml();
     bool isNoncompliantMail();
     QPair<QString, QString> getBody();
 
@@ -56,18 +51,11 @@ private:
     QString msgfile;
     QString enconding;
     bool isnoncompliant;
-    int lastpos;
 
     void parseHeader();
     void parseBody();
 
-    bool isMultipart();
-    QString getBoundary();
-    QString findBody();
-    void trydecode();
-    QString getHeaderValue(const std::string &field);
-
-    QByteArray& decodeqp(const QString &input);
+    int lastpos;
 
     QString decodeall(const QString &str);
     QString findNextStr(QTextStream &in, QString str);

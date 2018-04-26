@@ -1,0 +1,3 @@
+[submodule "src/third-party/Qt-Quoted-Printable"]
+	path = src/third-party/Qt-Quoted-Printable
+	url = https://github.com/bluetiger9/Qt-Quoted-Printable.git

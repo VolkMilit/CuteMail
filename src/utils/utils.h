@@ -33,11 +33,11 @@ public:
     virtual ~utils();
 
 protected:
-    QString decodeQP(QString str);
+    /*QString decodeQP(QString str);
     std::string decodeQP(const std::string &str);
 
     QString decodeB64(QString str);
-    std::string decodeB64(const std::string &str);
+    std::string decodeB64(const std::string &str);*/
 
     const char *toCChar(QString qstr);
     std::vector<std::string> stdSplit(const std::string &str, char delim);
@@ -45,6 +45,8 @@ protected:
     QTextStream &QStdErr();
 
     QString toCamelString(const QString &s);
+    QString removeLastStrSymbol(const QString &str, const char s);
+    QString replaceLastStrSymbol(const QString &str, const char s, const char ss);
 };
 
 #endif // UTILS_H
