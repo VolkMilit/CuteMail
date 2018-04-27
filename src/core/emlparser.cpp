@@ -96,16 +96,24 @@ void emlparser::parseHeader()
     {
         line = in.readLine();
         QStringList field = line.split(": ");
+        QString second;
+
+        if (field.size() > 1)
+        {
+            second = field.at(1) + " ";
+            for (auto i = 2; i < field.size(); i++)
+                second += field.at(i) + " ";
+        }
 
         if (field.at(0) == "Date")
-            this->header.date = field.at(1);
+            this->header.date = second;
 
         if (field.at(0) == "Delivered-To")
-            this->header.to = decodeall(field.at(1));
+            this->header.to = decodeall(second);
 
         if (field.at(0) == "Subject")
         {
-            this->header.subject = decodeall(field.at(1));
+            this->header.subject = decodeall(second);
             int lastseek = in.pos();
 
             while (!in.atEnd())
@@ -123,7 +131,7 @@ void emlparser::parseHeader()
 
         if (field.at(0) == "From")
         {
-            this->header.from = decodeall(field.at(1));
+            this->header.from = decodeall(second);
             int lastseek = in.pos();
 
             while (!in.atEnd())
@@ -140,14 +148,14 @@ void emlparser::parseHeader()
         }
 
         if (field.at(0) == "Return-path")
-            this->header.returnpath = decodeall(field.at(1));
+            this->header.returnpath = decodeall(second);
 
         if (field.at(0) == "Content-Transfer-Encoding")
             this->header.cte = field.at(1);
 
         if (field.at(0) == "Content-Type")
         {
-            QString ct = field.at(1);
+            QString ct = second;
             this->header.ct = ct.split(";").at(0);
         }
 
@@ -258,6 +266,23 @@ void emlparser::parseBody()
         decoded1 = str_body1;
         decoded2 = str_body2;
     }
+
+    /*QStringList ll = decoded1.split(" ");
+    QString tmp;
+    for (QString str : ll)
+    {
+        if (str.contains("http"))
+        {
+            str.remove("<");
+            str.remove(">");
+
+            tmp += "<a href='" + str + "'>" + str + "</a>";
+            continue;
+        }
+
+        tmp += str + " ";
+    }
+    decoded1 = tmp;*/
 
     this->body.first = decoded1;
     this->body.second = decoded2;  
