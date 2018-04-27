@@ -4,6 +4,8 @@ All mail clients suck. This one just sucks less. (c) circa (mutt)
 
 Yet another GUI email client that sucks less.
 
+Client is still WIP. You can test it at your own risk.
+
 ## Contents
 
 * [Screenshots](#screenshots)
