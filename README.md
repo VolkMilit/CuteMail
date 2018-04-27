@@ -44,7 +44,6 @@ Creating:
 - Qt5
 - Compiller with C++11 support
 - libetpan
-- libmimetic (at this moment used like 1% of the futures, because it was simplier to write own parser)
 
 ### LICENSE
 See [LICENSE](LICENSE) in root repository.
