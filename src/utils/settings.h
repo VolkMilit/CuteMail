@@ -22,6 +22,7 @@
 #include <QString>
 #include <QSettings>
 #include <QDir>
+#include <QVector>
 
 class settings
 {
@@ -29,7 +30,7 @@ public:
     settings();
     ~settings();
 
-    void write(QString file, QString group, QString value, QVariant var);
+    void write(QString file, QString group, QString field, QVariant var);
     QString read(QString file, QString group, QString value);
     int readInt(QString file, QString group, QString value);
     QStringList readGroup(QString file, QString group);
@@ -91,15 +92,10 @@ public:
     void setUseXDGBrowser(int value);
     int getUseXDGBrowser();
 
-    // [shortcuts]
-    // Search
-    void setShortcutSearch(QString value);
-    QString getShortcutSearch();
-
     // [readonly]
     // TableHeadersWight
     void setTableHeadersWight(QString value);
-    QString getTableHeadersWight();
+    QVector<int> getTableHeadersWight();
 
     // SplitterSizes
     void setSplitterSizes(QString value);
@@ -107,11 +103,11 @@ public:
 
     // WindowDemention
     void setWindowDemention(QString value);
-    QString getWindowDemention();
+    QVector<int> getWindowDemention();
 
     // WindowFullscreen
-    void setWindowFullscreen(QString value);
-    QString getWindowFullscreen();
+    void setWindowFullscreen(int value);
+    int getWindowFullscreen();
 
     bool settingsFile();
 

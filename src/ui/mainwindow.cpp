@@ -56,11 +56,12 @@ void MainWindow::setupMainwindow()
     QLineEdit *le_search = new QLineEdit;
     QWidget *empty = new QWidget;
 
-    QShortcut *sc_search = new QShortcut(QKeySequence(setting->getShortcutSearch()), this);
+    QString s_search = setting->read(setting->getSettingsFilePath(), "Shortcuts", "Search");
+    QShortcut *sc_search = new QShortcut(QKeySequence(s_search), this);
     connect(sc_search, &QShortcut::activated, le_search, QOverload<>::of(&QLineEdit::setFocus));
 
     empty->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    le_search->setPlaceholderText("Search... (" + setting->getShortcutSearch() + ")");
+    le_search->setPlaceholderText("Search... (" + s_search + ")");
     le_search->setClearButtonEnabled(true);
     connect(le_search, &QLineEdit::textChanged, this, &MainWindow::search);
 
@@ -380,18 +381,21 @@ void MainWindow::readSettings()
         writeSettings();
     }
 
-    const QString dem = setting->getWindowDemention();
-    const QString max = setting->getWindowFullscreen();
-    const QString column = setting->getTableHeadersWight();
-    const QStringList column_list = column.split(",");
+    if (setting->getWindowFullscreen() == 1)
+    {
+        this->showMaximized();
+    }
+    else
+    {
+        const QVector<int> dem = setting->getWindowDemention();
+        this->resize(dem.at(0), dem.at(1));
+    }
+
+    QVector<int> column = setting->getTableHeadersWight();
+    for (auto i = 0; i < ui->tb_mails->columnCount(); i++)
+        ui->tb_mails->setColumnWidth(i, column.at(i));
+
     const QString last_acc = setting->getLastAccount();
-
-    this->resize(dem.split("x")[0].toInt(), dem.split("x")[1].toInt());
-    if (max.toInt() == 1) this->showMaximized();
-
-    for (int i = 0; i < column_list.length(); i++)
-        ui->tb_mails->setColumnWidth(i, column_list.at(i).toInt());
-
     for (auto acc = 0; acc < ui->treeWidget->topLevelItemCount(); acc++)
     {
         QTreeWidgetItem *item = ui->treeWidget->topLevelItem(acc);
@@ -416,7 +420,7 @@ void MainWindow::writeSettings()
 
     setting->setTableHeadersWight(column_str);
     setting->setWindowDemention(QString::number(MainWindow::width()) + "x" + QString::number(MainWindow::height()));
-    setting->setWindowFullscreen(QString::number(this->isMaximized()));
+    setting->setWindowFullscreen(isMaximized());
     setting->setLastAccount(getCurrentAccount().at(0));
 }
 

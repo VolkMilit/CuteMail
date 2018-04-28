@@ -174,18 +174,6 @@ int settings::getUseXDGBrowser()
     return readInt(settingsBase, "General", "UseXDGBrowser");
 }
 
-// [Shortcuts] for user shortcuts
-// Search
-void settings::setShortcutSearch(QString value)
-{
-    write(settingsBase, "Shortcuts", "Search", value);
-}
-
-QString settings::getShortcutSearch()
-{
-    return read(settingsBase, "Shortcuts", "Search");
-}
-
 // [readonly] for program-generated values
 // DisplayMessageOnce
 void settings::setDisplayMessageOnce(int value)
@@ -204,9 +192,16 @@ void settings::setTableHeadersWight(QString value)
     write(settingsBase, "readonly", "TableHeadersWight", value);
 }
 
-QString settings::getTableHeadersWight()
+QVector<int> settings::getTableHeadersWight()
 {
-    return read(settingsBase, "readonly", "TableHeadersWight");
+    QStringList tmp = read(settingsBase, "readonly", "TableHeadersWight").split(",");
+    tmp.removeAt(tmp.length()-1);
+    QVector<int> ret;
+
+    for (QVariant i : tmp)
+        ret.push_back(i.toInt());
+
+    return ret;
 }
 
 // SplitterSizes
@@ -226,20 +221,23 @@ void settings::setWindowDemention(QString value)
     write(settingsBase, "readonly", "WindowDemention", value);
 }
 
-QString settings::getWindowDemention()
+QVector<int> settings::getWindowDemention()
 {
-    return read(settingsBase, "readonly", "WindowDemention");
+    QStringList tmp = read(settingsBase, "readonly", "WindowDemention").split("x");
+    QVector<int> ret = {QVariant(tmp.at(0)).toInt(), QVariant(tmp.at(1)).toInt()};
+
+    return ret;
 }
 
 // WindowFullscreen
-void settings::setWindowFullscreen(QString value)
+void settings::setWindowFullscreen(int value)
 {
     write(settingsBase, "readonly", "WindowFullscreen", value);
 }
 
-QString settings::getWindowFullscreen()
+int settings::getWindowFullscreen()
 {
-    return read(settingsBase, "readonly", "WindowFullscreen");
+    return readInt(settingsBase, "readonly", "WindowFullscreen");
 }
 
 QString settings::getSettingsPath()
@@ -252,11 +250,11 @@ QString settings::getSettingsFilePath()
   return settingsBase;
 }
 
-void settings::write(QString file, QString group, QString value, QVariant var)
+void settings::write(QString file, QString group, QString field, QVariant var)
 {
     QSettings settings(file, QSettings::IniFormat);
     settings.beginGroup(group);
-    settings.setValue(value, var);
+    settings.setValue(field, var);
     settings.endGroup();
 }
 
