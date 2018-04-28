@@ -98,7 +98,7 @@ void emlparser::parseHeader()
         QStringList field = line.split(": ");
         QString second;
 
-        if (field.size() > 1)
+        if (field.size() > 1) // since split break something like this: Re: Fwd: blabla
         {
             second = field.at(1) + " ";
             for (auto i = 2; i < field.size(); i++)
@@ -155,8 +155,37 @@ void emlparser::parseHeader()
 
         if (field.at(0) == "Content-Type")
         {
-            QString ct = second;
-            this->header.ct = ct.split(";").at(0);
+            QStringList ct = second.split(";");
+            this->header.ct = ct.at(0);
+
+            if (this->header.ct == "multipart/alternative")
+            {
+                QString tmp = ct.at(1);
+                QString tmp2 = in.readLine();
+                int lastseek = in.pos();
+
+                if (tmp2.contains("boundary="))
+                {
+                    this->header.boundary = tmp2.split("boundary=").at(1);
+
+                    if (this->header.boundary.contains(";"))
+                        tmp = this->header.boundary.split(";").at(0);
+
+                    this->header.boundary.remove("\"");
+                    this->header.boundary.remove(" ");
+                    this->header.boundary.remove(";");
+                    this->header.boundary.remove("charset=utf-8");
+                }
+                else
+                {
+                    in.seek(lastseek);
+                    this->header.boundary = tmp.split("boundary=").at(1);
+                    this->header.boundary.remove("\"");
+                    this->header.boundary.remove(" ");
+                    this->header.boundary.remove(";");
+                    this->header.boundary.remove("charset=utf-8");
+                }
+            }
         }
 
         if (field.at(0) == "List-Unsubscribe")
@@ -209,16 +238,38 @@ void emlparser::parseBody()
 
     in.seek(lastpos);
 
+    // find actually boundary, thanks eml (fuck you)
+    if (this->header.ct == "multipart/mixed")
+    {
+        while(!in.atEnd())
+        {
+            line = in.readLine();
+
+            if (line.contains("boundary="))
+            {
+                this->header.boundary = line.split("=").at(1);
+                this->header.boundary.remove("\"");
+                break;
+            }
+        }
+    }
+
     while (!in.atEnd())
     {
         line = in.readLine();
         eof = "\n";
 
-        if (line.at(0) == '-' && line.at(1) == '-')
+        if (line == "--" + this->header.boundary + "--")
+            break;
+
+        if (line == "--" + this->header.boundary)
         {
             part++;
             continue;
         }
+
+        if (line == "MIME-Version: 1.0")
+            continue;
 
         if (line.contains("Content-Type:") || line.contains("charset") && !line.contains("meta"))
             continue;
@@ -248,8 +299,17 @@ void emlparser::parseBody()
     QString decoded1;
     QString decoded2;
 
+
+    /*
+        3526
+        2 encodings...
+    */
+
     if (enconding.contains("quoted-printable"))
     {
+        str_body1.replace("==", "="); // some issues with double equal in qp
+        str_body2.replace("==", "=");
+
         decoded1 = QuotedPrintable::decode(QVariant(str_body1).toByteArray());
         decoded2 = QuotedPrintable::decode(QVariant(str_body2).toByteArray());
     }
@@ -285,7 +345,7 @@ void emlparser::parseBody()
     decoded1 = tmp;*/
 
     this->body.first = decoded1;
-    this->body.second = decoded2;  
+    this->body.second = decoded2;
 }
 
 bool emlparser::isNoncompliantMail()

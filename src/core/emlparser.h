@@ -60,6 +60,8 @@ private:
     QString decodeall(const QString &str);
     QString findNextStr(QTextStream &in, QString str);
 
+    void mixedBound();
+
     struct header
     {
         QString to;
@@ -70,12 +72,14 @@ private:
         QString ct;
         QString date;
         QString usubscribelist;
+        QString boundary;
     } header;
 
     struct body
     {
         QString first;
         QString second;
+        QString attachments;
     } body;
 };
 
