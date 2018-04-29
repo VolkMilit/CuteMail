@@ -45,6 +45,10 @@
 #include "ui/aboutdialog.h"
 #include "ui/searchdialog.h"
 
+#include "ui/customwidgets/htmlbrowser.h"
+#include "ui/customwidgets/searchline.h"
+#include "ui/customwidgets/spacer.h"
+
 namespace Ui {class MainWindow;}
 
 class MainWindow : public QMainWindow
@@ -68,7 +72,6 @@ private slots:
     void on_actionAbout_CuteMail_triggered();
     void on_actionFind_triggered();
 
-    void openExternal(const QUrl &url);
     void showTextMessage();
     void showFullMessage();
     void search(const QString &text);
@@ -90,8 +93,12 @@ private:
 
     Ui::MainWindow *ui;
     cmgenerate *gen;
-    settings *setting;
+    Settings *setting;
     mailDir *maild;
+
+    // widgets
+    Ui::HTMLBrowser *webview;
+    Ui::SearchLine *searchline;
 
     QVector<QString> tmp;
 };

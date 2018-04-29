@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     gen(new cmgenerate()),
-    setting(new settings()),
+    setting(new Settings()),
     maild(new mailDir())
 {
     ui->setupUi(this);
@@ -42,6 +42,7 @@ MainWindow::~MainWindow()
 
     writeSettings();
 
+    delete webview;
     delete maild;
     delete gen;
     delete setting;
@@ -52,21 +53,15 @@ void MainWindow::setupMainwindow()
 {
     ui->fr_warning->hide();
 
+    // webview widget
+    webview = new Ui::HTMLBrowser(this);
+    ui->v_splitter->addWidget(webview);
+
     // search widget in toolbar
-    QLineEdit *le_search = new QLineEdit;
-    QWidget *empty = new QWidget;
-
-    QString s_search = setting->read(setting->getSettingsFilePath(), "Shortcuts", "Search");
-    QShortcut *sc_search = new QShortcut(QKeySequence(s_search), this);
-    connect(sc_search, &QShortcut::activated, le_search, QOverload<>::of(&QLineEdit::setFocus));
-
-    empty->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    le_search->setPlaceholderText("Search... (" + s_search + ")");
-    le_search->setClearButtonEnabled(true);
-    connect(le_search, &QLineEdit::textChanged, this, &MainWindow::search);
-
-    ui->toolBar->addWidget(empty);
-    ui->toolBar->addWidget(le_search);
+    searchline = new Ui::SearchLine(this);
+    connect(searchline, &QLineEdit::textChanged, this, &MainWindow::search);
+    ui->toolBar->addWidget(new Ui::Spacer);
+    ui->toolBar->addWidget(searchline);
 }
 
 void MainWindow::setupShortcuts()
@@ -207,7 +202,7 @@ void MainWindow::showFullMessage()
 {
     QTableWidgetItem *item = ui->tb_mails->currentItem();
 
-    ui->webView->show();
+    webview->show();
     ui->textBrowser->hide();
     ui->fr_warning->hide();
 
@@ -232,12 +227,12 @@ void MainWindow::showFullMessage()
         }
     }*/
 
-    //ui->webView->setHtml(dbbody);
+    //webview->setHtml(dbbody);
 
     if (!eml.getBody().second.isEmpty())
-        ui->webView->setHtml(eml.getBody().second);
+        webview->setHtml(eml.getBody().second);
     else
-        ui->webView->setHtml(eml.getBody().first);
+        webview->setHtml(eml.getBody().first);
 }
 
 void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
@@ -245,7 +240,7 @@ void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
     qDebug() << this->tmp.at(item->row());
 
     ui->fr_warning->hide();
-    ui->webView->hide();
+    webview->hide();
     ui->textBrowser->show();
 
     ui->statusBar->showMessage("Loading...");
@@ -342,35 +337,6 @@ void MainWindow::on_treeWidget_itemSelectionChanged()
 void MainWindow::setupView()
 {
     ui->textBrowser->setOpenExternalLinks(true);
-
-    ui->webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-    connect(ui->webView, &QWebView::linkClicked, this, &MainWindow::openExternal);
-
-    ui->webView->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
-    ui->webView->settings()->setAttribute(QWebSettings::JavaEnabled, false);
-    ui->webView->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
-    ui->webView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, false);
-    ui->webView->settings()->setMaximumPagesInCache(0);
-    ui->webView->settings()->setOfflineStorageDefaultQuota(0);
-    ui->webView->settings()->setObjectCacheCapacities(0, 0, 0);
-    ui->webView->settings()->setOfflineWebApplicationCacheQuota(0);
-    ui->webView->settings()->setDefaultTextEncoding("utf-8");
-
-    ui->webView->hide();
-}
-
-void MainWindow::openExternal(const QUrl &url)
-{
-    if (setting->getUseXDGBrowser() == 1)
-    {
-        QDesktopServices::openUrl(url.toString());
-    }
-    else
-    {
-        ui->webView->load(url);
-        connect(ui->bt_chngview, &QPushButton::clicked, this, &MainWindow::showFullMessage);
-        showSplash("Using external browser is disabled. You can go back, click this button.", "Go back");
-    }
 }
 
 void MainWindow::readSettings()
@@ -441,9 +407,9 @@ void MainWindow::on_actionActionUnsubscribe_triggered()
         QDesktopServices::openUrl(eml.getUsubscribelist());
     else
     {
-       ui->webView->show();
+       webview->show();
        ui->textBrowser->hide();
-       ui->webView->setUrl(eml.getUsubscribelist());
+       webview->setUrl(eml.getUsubscribelist());
     }
 }
 
