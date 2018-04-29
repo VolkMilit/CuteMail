@@ -24,7 +24,7 @@ with fixed formating.
 
 mailfetch::mailfetch(QString account, QString server, QString password) :
     gen(new cmgenerate()),
-    setting(new settings())
+    setting(new Settings())
 {
     struct mailimap * imap;
     int r;

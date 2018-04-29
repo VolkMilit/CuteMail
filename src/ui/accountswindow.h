@@ -52,7 +52,7 @@ private:
 
     Ui::accountsWindow *ui;
 
-    settings *setting;
+    Settings *setting;
     cmgenerate *gen;
 
     QString prevAccount;

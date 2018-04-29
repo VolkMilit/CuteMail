@@ -19,7 +19,7 @@
 #include "generate.h"
 
 cmgenerate::cmgenerate() :
-    setting(new settings())
+    setting(new Settings())
 {
     mailFolderPath = setting->getMailDir() + "/";
 }

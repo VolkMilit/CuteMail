@@ -38,7 +38,10 @@ SOURCES += main.cpp\
     ui/newaccdialog.cpp \
     ui/aboutdialog.cpp \
     ui/searchdialog.cpp \
-    core/database.cpp
+    core/database.cpp \
+    ui/customwidgets/htmlbrowser.cpp \
+    ui/customwidgets/searchline.cpp \
+    ui/customwidgets/spacer.cpp
 
 HEADERS  += ui/mainwindow.h \
     ui/accountswindow.h \
@@ -53,7 +56,10 @@ HEADERS  += ui/mainwindow.h \
     ui/newaccdialog.h \
     ui/aboutdialog.h \
     ui/searchdialog.h \
-    core/database.h
+    core/database.h \
+    ui/customwidgets/htmlbrowser.h \
+    ui/customwidgets/searchline.h \
+    ui/customwidgets/spacer.h
     
 FORMS    += ui/mainwindow.ui \
     ui/accountswindow.ui \

@@ -24,11 +24,11 @@
 #include <QDir>
 #include <QVector>
 
-class settings
+class Settings
 {
 public:
-    settings();
-    ~settings();
+    Settings();
+    ~Settings();
 
     void write(QString file, QString group, QString field, QVariant var);
     QString read(QString file, QString group, QString value);

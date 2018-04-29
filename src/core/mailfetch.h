@@ -56,7 +56,7 @@ private:
     uint32_t get_uid(struct mailimap_msg_att * msg_att);
 
     cmgenerate *gen;
-    settings *setting;
+    Settings *setting;
 };
 
 #endif // MAILFETCH_H

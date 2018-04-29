@@ -36,7 +36,7 @@ public:
 private:
     QString mailFolderPath;
 
-    settings *setting;
+    Settings *setting;
 };
 
 #endif // GENERATE_H

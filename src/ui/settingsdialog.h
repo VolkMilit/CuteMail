@@ -47,7 +47,7 @@ private slots:
 
 private:
     Ui::settingsDialog *ui;
-    settings *setting;
+    Settings *setting;
 
     void readSettings();
     void writeSettings();

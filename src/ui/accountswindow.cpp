@@ -23,7 +23,7 @@
 accountsWindow::accountsWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::accountsWindow),
-    setting(new settings()),
+    setting(new Settings()),
     gen(new cmgenerate())
 {
     ui->setupUi(this);

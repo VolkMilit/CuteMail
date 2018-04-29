@@ -18,19 +18,19 @@
 
 #include "settings.h"
 
-settings::settings()
+Settings::Settings()
 {
     settingsPath = QDir::homePath() + "/.config/CuteMail/";
     accauntsBase = settingsPath + "accaunts.ini";
     settingsBase = settingsPath + "settings.ini";
 }
 
-settings::~settings()
+Settings::~Settings()
 {
 
 }
 
-bool settings::settingsFile()
+bool Settings::settingsFile()
 {
     QFile setting(settingsBase);
     if (!setting.exists())
@@ -41,34 +41,34 @@ bool settings::settingsFile()
 
 /*accounts.ini*/
 // ProxyString
-void settings::setProxyString(QString value, QString account)
+void Settings::setProxyString(QString value, QString account)
 {
     write(accauntsBase, account, "ProxyString", value);
 }
 
-QString settings::getProxyString(QString account)
+QString Settings::getProxyString(QString account)
 {
     return read(accauntsBase, account, "ProxyString");
 }
 
 // Port
-void settings::setPort(QString value, QString account)
+void Settings::setPort(QString value, QString account)
 {
     write(accauntsBase, account, "Port", value);
 }
 
-QString settings::getPort(QString account)
+QString Settings::getPort(QString account)
 {
     return read(accauntsBase, account, "Port");
 }
 
 // UseSSL
-void settings::setUseSSL(QString value, QString account)
+void Settings::setUseSSL(QString value, QString account)
 {
     write(accauntsBase, account, "UseSSL", value);
 }
 
-QString settings::getUseSSL(QString account)
+QString Settings::getUseSSL(QString account)
 {
     return read(accauntsBase, account, "UseSSL");
 }
@@ -76,123 +76,123 @@ QString settings::getUseSSL(QString account)
 /*settings.ini*/
 // [general] for user related settings
 // LastAccount
-void settings::setLastAccount(QString value)
+void Settings::setLastAccount(QString value)
 {
     write(settingsBase, "General", "LastAccount", value);
 }
 
-QString settings::getLastAccount()
+QString Settings::getLastAccount()
 {
     return read(settingsBase, "General", "LastAccount");
 }
 
 // MailDir
-void settings::setMailDir(QString value)
+void Settings::setMailDir(QString value)
 {
     write(settingsBase, "General", "MailDir", value);
 }
 
-QString settings::getMailDir()
+QString Settings::getMailDir()
 {
     return read(settingsBase, "General", "MailDir");
 }
 
 // AlwaysUseWebview
-void settings::setAlwaysUseWebview(int value)
+void Settings::setAlwaysUseWebview(int value)
 {
     write(settingsBase, "General", "AlwaysUseWebview", value);
 }
 
-int settings::getAlwaysUseWebview()
+int Settings::getAlwaysUseWebview()
 {
     return readInt(settingsBase, "General", "AlwaysUseWebview");
 }
 
 // UseWebviewAutomatically
-void settings::setUseWebviewAutomatically(int value)
+void Settings::setUseWebviewAutomatically(int value)
 {
     write(settingsBase, "General", "UseWebviewAutomatically", value);
 }
 
-int settings::getUseWebviewAutomatically()
+int Settings::getUseWebviewAutomatically()
 {
     return readInt(settingsBase, "General", "UseWebviewAutomatically");
 }
 
 // CheckForNewMail
-void settings::setCheckForNewMail(int value)
+void Settings::setCheckForNewMail(int value)
 {
     write(settingsBase, "General", "CheckForNewMail", value);
 }
 
-int settings::getCheckForNewMail()
+int Settings::getCheckForNewMail()
 {
     return readInt(settingsBase, "General", "CheckForNewMail");
 }
 
 // CheckAfter
-void settings::setCheckAfter(int value)
+void Settings::setCheckAfter(int value)
 {
     write(settingsBase, "General", "CheckAfter", value);
 }
 
-int settings::getCheckAfter()
+int Settings::getCheckAfter()
 {
     return readInt(settingsBase, "General", "CheckAfter");
 }
 
 // DisplayTray
-void settings::setDisplayTray(int value)
+void Settings::setDisplayTray(int value)
 {
     write(settingsBase, "General", "DisplayTray", value);
 }
 
-int settings::getDisplayTray()
+int Settings::getDisplayTray()
 {
     return readInt(settingsBase, "General", "DisplayTray");
 }
 
 // DisplayNotify
-void settings::setDisplayNotify(int value)
+void Settings::setDisplayNotify(int value)
 {
     write(settingsBase, "General", "DisplayNotify", value);
 }
 
-int settings::getDisplayNotify()
+int Settings::getDisplayNotify()
 {
     return readInt(settingsBase, "General", "DisplayNotify");
 }
 
 // UseXDGBrowser
-void settings::setUseXDGBrowser(int value)
+void Settings::setUseXDGBrowser(int value)
 {
     write(settingsBase, "General", "UseXDGBrowser", value);
 }
 
-int settings::getUseXDGBrowser()
+int Settings::getUseXDGBrowser()
 {
     return readInt(settingsBase, "General", "UseXDGBrowser");
 }
 
 // [readonly] for program-generated values
 // DisplayMessageOnce
-void settings::setDisplayMessageOnce(int value)
+void Settings::setDisplayMessageOnce(int value)
 {
     write(settingsBase, "readonly", "DisplayMessageOnce", value);
 }
 
-int settings::getDisplayMessageOnce()
+int Settings::getDisplayMessageOnce()
 {
     return readInt(settingsBase, "readonly", "DisplayMessageOnce");
 }
 
 // TableHeadersWight
-void settings::setTableHeadersWight(QString value)
+void Settings::setTableHeadersWight(QString value)
 {
     write(settingsBase, "readonly", "TableHeadersWight", value);
 }
 
-QVector<int> settings::getTableHeadersWight()
+QVector<int> Settings::getTableHeadersWight()
 {
     QStringList tmp = read(settingsBase, "readonly", "TableHeadersWight").split(",");
     tmp.removeAt(tmp.length()-1);
@@ -205,23 +205,23 @@ QVector<int> settings::getTableHeadersWight()
 }
 
 // SplitterSizes
-void settings::setSplitterSizes(QString value)
+void Settings::setSplitterSizes(QString value)
 {
     write(settingsBase, "readonly", "SplitterSizes", value);
 }
 
-QString settings::getSplitterSizes()
+QString Settings::getSplitterSizes()
 {
     return read(settingsBase, "readonly", "SplitterSizes");
 }
 
 // WindowDemention
-void settings::setWindowDemention(QString value)
+void Settings::setWindowDemention(QString value)
 {
     write(settingsBase, "readonly", "WindowDemention", value);
 }
 
-QVector<int> settings::getWindowDemention()
+QVector<int> Settings::getWindowDemention()
 {
     QStringList tmp = read(settingsBase, "readonly", "WindowDemention").split("x");
     QVector<int> ret = {QVariant(tmp.at(0)).toInt(), QVariant(tmp.at(1)).toInt()};
@@ -230,27 +230,27 @@ QVector<int> settings::getWindowDemention()
 }
 
 // WindowFullscreen
-void settings::setWindowFullscreen(int value)
+void Settings::setWindowFullscreen(int value)
 {
     write(settingsBase, "readonly", "WindowFullscreen", value);
 }
 
-int settings::getWindowFullscreen()
+int Settings::getWindowFullscreen()
 {
     return readInt(settingsBase, "readonly", "WindowFullscreen");
 }
 
-QString settings::getSettingsPath()
+QString Settings::getSettingsPath()
 {
     return settingsPath;
 }
 
-QString settings::getSettingsFilePath()
+QString Settings::getSettingsFilePath()
 {
   return settingsBase;
 }
 
-void settings::write(QString file, QString group, QString field, QVariant var)
+void Settings::write(QString file, QString group, QString field, QVariant var)
 {
     QSettings settings(file, QSettings::IniFormat);
     settings.beginGroup(group);
@@ -258,7 +258,7 @@ void settings::write(QString file, QString group, QString field, QVariant var)
     settings.endGroup();
 }
 
-QString settings::read(QString file, QString group, QString value)
+QString Settings::read(QString file, QString group, QString value)
 {
     QString rv;
 
@@ -270,7 +270,7 @@ QString settings::read(QString file, QString group, QString value)
     return rv;
 }
 
-int settings::readInt(QString file, QString group, QString value)
+int Settings::readInt(QString file, QString group, QString value)
 {
     int rv;
 
@@ -282,7 +282,7 @@ int settings::readInt(QString file, QString group, QString value)
     return rv;
 }
 
-QStringList settings::readGroup(QString file, QString group)
+QStringList Settings::readGroup(QString file, QString group)
 {
     QStringList rv;
 
