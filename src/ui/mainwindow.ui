@@ -133,18 +133,12 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWebView" name="webView">
-        <property name="url">
-         <url>
-          <string>about:blank</string>
-         </url>
-        </property>
-       </widget>
        <widget class="QTextBrowser" name="textBrowser">
         <property name="openExternalLinks">
          <bool>true</bool>
         </property>
        </widget>
+       <widget class="QListWidget" name="lw_attachments"/>
       </widget>
      </widget>
     </item>
@@ -271,13 +265,6 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>QWebView</class>
-   <extends>QWidget</extends>
-   <header>QtWebKitWidgets/QWebView</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="resources.qrc"/>
  </resources>

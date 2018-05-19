@@ -259,8 +259,8 @@ void emlparser::parseBody()
         line = in.readLine();
         eof = "\n";
 
-        if (line == "--" + this->header.boundary + "--")
-            break;
+        //if (line == "--" + this->header.boundary + "--")
+        //    break;
 
         if (line == "--" + this->header.boundary)
         {
@@ -271,8 +271,41 @@ void emlparser::parseBody()
         if (line == "MIME-Version: 1.0")
             continue;
 
-        if (line.contains("Content-Type:") || line.contains("charset") && !line.contains("meta"))
+        if (line.contains("Content-Type:") ||\
+                (line.contains("charset") && !line.contains("meta")))
             continue;
+
+        if (line.contains("Content-Disposition:"))
+        {
+            QString name;
+            if (line.split(";").size() > 1)
+            {
+                int lastseek = in.pos();
+                line.remove("\"");
+
+                QString tmp = line.split(";").at(1);
+                name = decodeall("=" + tmp.split("=").at(2) + "=");
+
+                while (!in.atEnd())
+                {
+                    line = in.readLine();
+                    line.remove("\"");
+
+                    if (line.at(0) == ' ')
+                        name += decodeall(line);
+                    else
+                        break;
+                }
+
+                qDebug() << "Found attachments name " + name;
+
+                this->header.attachmentsnames.push_back(name);
+
+                in.seek(lastseek);
+            }
+
+            continue;
+        }
 
         if (line.contains("Content-Transfer-Encoding"))
         {
@@ -292,6 +325,8 @@ void emlparser::parseBody()
             str_body1 += line + eof;
         else
             str_body2 += line + eof;
+
+        // attachments
     }
 
     file.close();
@@ -389,4 +424,9 @@ QString emlparser::getUsubscribelist()
 QString emlparser::getReturnPath()
 {
     return this->header.returnpath;
+}
+
+QStringList emlparser::getAttachmenstNames()
+{
+    return this->header.attachmentsnames;
 }

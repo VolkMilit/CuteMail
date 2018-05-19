@@ -30,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     populateTreeWidget();
-    setupView();
     readSettings();
     populateTable();
     setupMainwindow();
@@ -43,6 +42,8 @@ MainWindow::~MainWindow()
     writeSettings();
 
     delete webview;
+    delete searchline;
+
     delete maild;
     delete gen;
     delete setting;
@@ -52,6 +53,7 @@ MainWindow::~MainWindow()
 void MainWindow::setupMainwindow()
 {
     ui->fr_warning->hide();
+    ui->textBrowser->setOpenExternalLinks(true);
 
     // webview widget
     webview = new Ui::HTMLBrowser(this);
@@ -158,7 +160,7 @@ void MainWindow::populateTable()
         ui->tb_mails->setItem(i, 2, item3);
     }
 
-    ui->statusBar->showMessage("Unreaded: " + QString::number(unread_count));
+    //ui->statusBar->showMessage("Unreaded: " + QString::number(unread_count));
 }
 
 void MainWindow::showTextMessage()
@@ -192,6 +194,9 @@ void MainWindow::showTextMessage()
     ui->textBrowser->clear();
     //ui->textBrowser->append(dbbody);
     ui->textBrowser->append(eml.getBody().first);
+
+    for (QString item : eml.getAttachmenstNames())
+        ui->lw_attachments->addItem(item);
 
     QTextCursor cursor = ui->textBrowser->textCursor();
     cursor.setPosition(0);
@@ -243,11 +248,11 @@ void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
     webview->hide();
     ui->textBrowser->show();
 
-    ui->statusBar->showMessage("Loading...");
+    //ui->statusBar->showMessage("Loading...");
 
     showTextMessage();
 
-    ui->statusBar->showMessage("Done.");
+    //ui->statusBar->showMessage("Done.");
 
     ui->actionDelete->setEnabled(true);
     ui->actionRestore->setEnabled(true);
@@ -331,12 +336,6 @@ void MainWindow::on_treeWidget_itemSelectionChanged()
     setWindowTitle(getCurrentAccount().at(0) + " - CuteMail");
     ui->actionDelete->setEnabled(false);
     ui->actionRestore->setEnabled(false);
-}
-
-// there will be all webview-related settings
-void MainWindow::setupView()
-{
-    ui->textBrowser->setOpenExternalLinks(true);
 }
 
 void MainWindow::readSettings()

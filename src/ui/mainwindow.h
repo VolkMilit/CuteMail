@@ -79,7 +79,6 @@ private slots:
 private:
     void populateTable();
     void populateTreeWidget();
-    void setupView();
     void setupMainwindow();
     void setupShortcuts();
 

@@ -46,6 +46,7 @@ public:
     QString getUsubscribelist();
     bool isNoncompliantMail();
     QPair<QString, QString> getBody();
+    QStringList getAttachmenstNames();
 
 private:
     QString msgfile;
@@ -73,6 +74,8 @@ private:
         QString date;
         QString usubscribelist;
         QString boundary;
+        QStringList attachments;
+        QStringList attachmentsnames;
     } header;
 
     struct body
