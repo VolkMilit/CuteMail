@@ -92,12 +92,12 @@ void newaccdialog::accept()
 
 void newaccdialog::wrongStyle(QWidget *widget)
 {
-    widget->style()->unpolish(widget);
+    //widget->style()->unpolish(widget);
     widget->setStyleSheet("QLineEdit{background-color: yellow;}");
 }
 
 void newaccdialog::standartStyle(QWidget *widget)
 {
-    widget->style()->unpolish(widget);
+    //widget->style()->unpolish(widget);
     widget->setStyleSheet("");
 }

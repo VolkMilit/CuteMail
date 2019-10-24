@@ -37,8 +37,8 @@
 
 #include "core/generate.h"
 #include "core/maildir.h"
-#include "core/emlparser.h"
-#include "core/mailfetch.h"
+//#include "core/emlparser.h"
+//#include "core/mailfetch.h"
 #include "core/database.h"
 #include "ui/accountswindow.h"
 #include "ui/settingsdialog.h"

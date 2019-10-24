@@ -29,7 +29,7 @@
 #include <QPair>
 
 #include "utils/utils.h"
-#include "third-party/Qt-Quoted-Printable/quotedprintable.h"
+//#include "third-party/Qt-Quoted-Printable/quotedprintable.h"
 
 class emlparser : private utils
 {

@@ -23,9 +23,9 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    gen(new cmgenerate()),
-    setting(new Settings()),
-    maild(new mailDir())
+    gen(new cmgenerate),
+    setting(new Settings),
+    maild(new mailDir)
 {
     ui->setupUi(this);
 
@@ -129,7 +129,7 @@ void MainWindow::populateTable()
     else                                 // we're just focuse on account name, so fallback to default
         tmp.append(maild->scanDir(gen->getMailFolderPath() + getCurrentAccount().at(0) + "/incoming"));    
 
-    for (auto i = 0; i < tmp.size(); i++)
+    /*for (auto i = 0; i < tmp.size(); i++)
     {
         emlparser eml(tmp.at(i));
 
@@ -158,7 +158,7 @@ void MainWindow::populateTable()
         ui->tb_mails->setItem(i, 0, item1);
         ui->tb_mails->setItem(i, 1, item2);
         ui->tb_mails->setItem(i, 2, item3);
-    }
+    }*/
 
     //ui->statusBar->showMessage("Unreaded: " + QString::number(unread_count));
 }
@@ -167,7 +167,7 @@ void MainWindow::showTextMessage()
 {
     QTableWidgetItem *item = ui->tb_mails->currentItem();
 
-    emlparser eml(this->tmp.at(item->row()));
+    //emlparser eml(this->tmp.at(item->row()));
     //database db(setting->getSettingsPath() + "accounts.db", getCurrentAccount().at(0));
 
     /*QString dbbody = db.getValue(item->row()+1, "body");
@@ -178,7 +178,7 @@ void MainWindow::showTextMessage()
         dbbody = eml.getBody().first;
     }*/
 
-    if (!eml.getUsubscribelist().isEmpty())
+    /*if (!eml.getUsubscribelist().isEmpty())
         ui->actionActionUnsubscribe->setEnabled(true);
     else
         ui->actionActionUnsubscribe->setEnabled(false);
@@ -200,7 +200,7 @@ void MainWindow::showTextMessage()
 
     QTextCursor cursor = ui->textBrowser->textCursor();
     cursor.setPosition(0);
-    ui->textBrowser->setTextCursor(cursor);
+    ui->textBrowser->setTextCursor(cursor);*/
 }
 
 void MainWindow::showFullMessage()
@@ -211,7 +211,7 @@ void MainWindow::showFullMessage()
     ui->textBrowser->hide();
     ui->fr_warning->hide();
 
-    emlparser eml(this->tmp.at(item->row()));
+    //emlparser eml(this->tmp.at(item->row()));
 
     /*database db(setting->getSettingsPath() + "accounts.db", getCurrentAccount().at(0));
     QString dbbody = db.getValue(item->row()+1, "bodyfull");
@@ -234,10 +234,10 @@ void MainWindow::showFullMessage()
 
     //webview->setHtml(dbbody);
 
-    if (!eml.getBody().second.isEmpty())
+    /*if (!eml.getBody().second.isEmpty())
         webview->setHtml(eml.getBody().second);
     else
-        webview->setHtml(eml.getBody().first);
+        webview->setHtml(eml.getBody().first);*/
 }
 
 void MainWindow::on_tb_mails_itemClicked(QTableWidgetItem *item)
@@ -277,7 +277,7 @@ void MainWindow::on_actionFetch_mail_triggered()
 
 void MainWindow::askForPassword(QString server, QString protocol, QString username)
 {
-    bool ok;
+    /*bool ok;
     QString text = QInputDialog::getText(this, tr("CuteMail"), \
                                             tr("Enter password for ") + getCurrentAccount().at(0), \
                                          QLineEdit::Password, "", &ok);
@@ -290,7 +290,7 @@ void MainWindow::askForPassword(QString server, QString protocol, QString userna
     else
     {
         QMessageBox::critical(this, "CuteMail", tr("Couldn't connect to ") + getCurrentAccount().at(0), QMessageBox::Ok);
-    }
+    }*/
 }
 
 void MainWindow::on_actionDelete_triggered()
@@ -400,16 +400,16 @@ void MainWindow::on_actionSettings_triggered()
 void MainWindow::on_actionActionUnsubscribe_triggered()
 {
     QTableWidgetItem *item = ui->tb_mails->currentItem();
-    emlparser eml(this->tmp.at(item->row()));
+    //emlparser eml(this->tmp.at(item->row()));
 
-    if (setting->getUseXDGBrowser() == 1)
+    /*if (setting->getUseXDGBrowser() == 1)
         QDesktopServices::openUrl(eml.getUsubscribelist());
     else
     {
        webview->show();
        ui->textBrowser->hide();
        webview->setUrl(eml.getUsubscribelist());
-    }
+    }*/
 }
 
 void MainWindow::showSplash(const QString &str, const QString &btnstr)

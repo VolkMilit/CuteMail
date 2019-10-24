@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets webkit webkitwidgets
 TARGET = CuteMail
 TEMPLATE = app
 CONFIG += c++11
-LIBS += -letpan
+#LIBS += -letpan
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -29,9 +29,9 @@ SOURCES += main.cpp\
     ui/accountswindow.cpp \
     core/generate.cpp \
     core/maildir.cpp \
-    core/emlparser.cpp \
-    core/mailfetch.cpp \
-    third-party/Qt-Quoted-Printable/quotedprintable.cpp \
+    #core/emlparser.cpp \
+    #core/mailfetch.cpp \
+    #third-party/Qt-Quoted-Printable/quotedprintable.cpp \
     utils/settings.cpp \
     utils/utils.cpp \
     ui/settingsdialog.cpp \
@@ -49,9 +49,9 @@ HEADERS  += ui/mainwindow.h \
     utils/settings.h \
     utils/utils.h \
     core/maildir.h \
-    core/emlparser.h \
-    core/mailfetch.h \
-    third-party/Qt-Quoted-Printable/quotedprintable.h \
+    #core/emlparser.h \
+    #core/mailfetch.h \
+    #third-party/Qt-Quoted-Printable/quotedprintable.h \
     ui/settingsdialog.h \
     ui/newaccdialog.h \
     ui/aboutdialog.h \
